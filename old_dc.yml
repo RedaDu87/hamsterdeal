@@ -1,22 +1,18 @@
 version: '3.8'
-
 services:
   mongodb:
     image: mongo:6.0
-    volumes:
-      - mongo_data:/data/db
+    container_name: annonces-mongodb
+    restart: always
     ports:
       - "27017:27017"
-    deploy:
-      mode: replicated
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-      placement:
-        constraints: [node.role == manager]
+    volumes:
+      - mongo_data:/data/db
 
   app:
-    image: redausername/annonces-app:latest   # ton image Docker Hub
+    build: .
+    container_name: annonces-app
+    restart: always
     depends_on:
       - mongodb
     ports:
@@ -32,18 +28,9 @@ services:
       - APP_UPLOAD_DIR=/app/uploads
     volumes:
       - ./uploads:/app/uploads
-    deploy:
-      mode: replicated
-      replicas: 2
-      restart_policy:
-        condition: any
-      update_config:
-        parallelism: 1
-        delay: 10s
-      placement:
-        constraints: [node.role == manager]
+    # Optionnel : attendre que Mongo soit prêt
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      test: ["CMD", "mongosh", "--eval", "db.runCommand('ping').ok"]
       interval: 10s
       timeout: 5s
       retries: 5

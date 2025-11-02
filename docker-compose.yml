@@ -1,10 +1,39 @@
-# docker-compose.yml
+version: '3.8'
 services:
-  mongo:
-    image: mongo:6
-    restart: unless-stopped
-    ports: ["27017:27017"]
+  mongodb:
+    image: mongo:6.0
+    container_name: annonces-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
     volumes:
-      - mongo-data:/data/db
+      - mongo_data:/data/db
+
+  app:
+    build: .
+    container_name: annonces-app
+    restart: always
+    depends_on:
+      - mongodb
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/annonces
+      - SPRING_DATA_MONGODB_DATABASE=annonces
+      - SPRING_WEB_LOCALE=fr_CH
+      - SPRING_WEB_LOCALE_RESOLVER=fixed
+      - APP_JWT_ISSUER=annonces-app
+      - APP_JWT_SECRET=change-me-please-very-long-secret-key
+      - APP_JWT_EXPIRATION=86400
+      - APP_UPLOAD_DIR=/app/uploads
+    volumes:
+      - ./uploads:/app/uploads
+    # Optionnel : attendre que Mongo soit prêt
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.runCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
-  mongo-data:
+  mongo_data:

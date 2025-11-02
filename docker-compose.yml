@@ -16,7 +16,7 @@ services:
         constraints: [node.role == manager]
 
   app:
-    image: redausername/annonces-app:latest   # ton image Docker Hub
+    image: anikondu87/annonces-app:latest   # ton image Docker Hub
     depends_on:
       - mongodb
     ports:

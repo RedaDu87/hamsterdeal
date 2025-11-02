@@ -55,7 +55,7 @@ public class DataSeeder {
             List<Ad> ads = new ArrayList<>();
 
             for (String category : categories) {
-                for (int i = 1; i <= 500000; i++) { // ⚠️ réduit à 50 pour éviter surcharge
+                for (int i = 1; i <= 80000; i++) { // ⚠️ réduit à 50 pour éviter surcharge
                     Ad ad = new Ad();
                     ad.setTitle(category + " annonce " + i);
                     ad.setDescription("Annonce " + i + " dans la catégorie " + category);

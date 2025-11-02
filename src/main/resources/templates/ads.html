@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="fr"
+      th:replace="~{fragments/_layout :: base(~{::body})}">
+<body class="bg-gray-50">
+
+<!-- HERO -->
+<!-- <section class="bg-gradient-to-r from-green-500 to-blue-600 text-white py-12 shadow-md mb-6">
+    <div class="max-w-6xl mx-auto px-4 text-center">
+        <h1 class="text-4xl md:text-5xl font-extrabold mb-3 drop-shadow">
+            🔎 Parcourir les <span class="text-yellow-300">Annonces</span>
+        </h1>
+        <p class="text-lg text-white/90">Affinez votre recherche et trouvez rapidement ce qu’il vous faut</p>
+    </div>
+</section> -->
+
+<!-- FORMULAIRE DE RECHERCHE -->
+<form id="advFilter"
+      class="max-w-6xl mx-auto flex flex-wrap gap-3 bg-white p-4 rounded-lg shadow-lg"
+      method="get"
+      th:action="@{/ads}">
+
+    <!-- Recherche globale -->
+    <div class="flex-1">
+        <input class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-400"
+               type="text" name="q" placeholder="Ex: iPhone 14, Renault Clio, appart 3 pièces…"
+               th:value="${q}" />
+    </div>
+
+   <!-- Catégorie -->
+<div class="relative">
+  <select
+    class="appearance-none p-3 pl-4 pr-10 border border-gray-300 rounded-lg bg-white text-gray-700 
+           focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
+           transition w-48 font-medium shadow-sm hover:border-gray-400 cursor-pointer"
+    name="category" id="fltCategory">
+
+    <option value="">Toutes catégories</option>
+    <option value="car" th:selected="${category=='car'}">🚗 Voitures</option>
+    <option value="electronics" th:selected="${category=='electronics'}">💻 Électronique</option>
+    <option value="home" th:selected="${category=='home'}">🏠 Maison</option>
+    <option value="fashion" th:selected="${category=='fashion'}">👗 Mode</option>
+    <option value="sports" th:selected="${category=='sports'}">🏀 Sport</option>
+    <option value="toys" th:selected="${category=='toys'}">🧸 Jouets</option>
+    <option value="books" th:selected="${category=='books'}">📚 Livres</option>
+    <option value="music" th:selected="${category=='music'}">🎵 Musique</option>
+    <option value="tools" th:selected="${category=='tools'}">🛠️ Outils</option>
+    <option value="garden" th:selected="${category=='garden'}">🌱 Jardin</option>
+    <option value="pets" th:selected="${category=='pets'}">🐾 Animaux</option>
+    <option value="jobs" th:selected="${category=='jobs'}">💼 Emplois</option>
+    <option value="services" th:selected="${category=='services'}">🛎️ Services</option>
+    <option value="realestate" th:selected="${category=='realestate'}">🏢 Immobilier</option>
+    <option value="collectibles" th:selected="${category=='collectibles'}">🖼️ Collections</option>
+  </select>
+
+  <!-- Icône flèche -->
+  <span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+    </svg>
+  </span>
+</div>
+
+<!-- Canton -->
+<div class="relative">
+  <select
+    class="appearance-none p-3 pl-4 pr-10 border border-gray-300 rounded-lg bg-white text-gray-700 
+           focus:ring-2 focus:ring-purple-500 focus:border-purple-500 
+           transition w-44 font-medium shadow-sm hover:border-gray-400 cursor-pointer"
+    name="canton">
+    <option value="">Tous cantons</option>
+    <option value="VD" th:selected="${canton=='VD'}">Vaud (VD)</option>
+    <option value="GE" th:selected="${canton=='GE'}">Genève (GE)</option>
+    <option value="ZH" th:selected="${canton=='ZH'}">Zurich (ZH)</option>
+    <option value="BE" th:selected="${canton=='BE'}">Berne (BE)</option>
+  </select>
+
+  <span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+    </svg>
+  </span>
+</div>
+
+
+    <!-- Prix -->
+    <div class="flex gap-2">
+        <input class="p-3 border rounded-lg w-28" type="number" name="priceMin" th:value="${priceMin}" placeholder="Min CHF" />
+        <input class="p-3 border rounded-lg w-28" type="number" name="priceMax" th:value="${priceMax}" placeholder="Max CHF" />
+    </div>
+
+    <input type="hidden" name="page" value="0"/>
+
+    <!-- Tri -->
+<div class="relative">
+<select
+  class="appearance-none p-3 pl-4 pr-10 border border-gray-300 rounded-lg bg-white text-gray-700 
+         focus:ring-2 focus:ring-amber-500 focus:border-amber-500 
+         transition w-52 font-medium shadow-sm hover:border-gray-400 cursor-pointer"
+  name="sort"
+  id="sortSelect"
+  onchange="document.getElementById('advFilter').submit()">
+
+
+    <option th:selected="${sort == 'createdAt' and dir == 'desc'}" value="createdAt,desc">🕓 Date (plus récentes)</option>
+    <option th:selected="${sort == 'createdAt' and dir == 'asc'}" value="createdAt,asc">🕓 Date (plus anciennes)</option>
+    <option th:selected="${sort == 'price' and dir == 'asc'}" value="price,asc">💰 Prix (croissant)</option>
+    <option th:selected="${sort == 'price' and dir == 'desc'}" value="price,desc">💰 Prix (décroissant)</option>
+  </select>
+
+  <!-- Icône flèche -->
+  <span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+    </svg>
+  </span>
+</div>
+
+
+    <!-- Bouton -->
+    <button class="bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white px-6 py-3 rounded-lg font-semibold shadow-md transition">
+        Appliquer filtres
+    </button>
+
+    <!-- FACETTES dynamiques -->
+    <div id="facetContainer" class="w-full mt-3">
+        <!-- 🚗 Exemple voitures -->
+        <div data-facet="car" class="hidden animate-fadeIn flex flex-wrap gap-2 border-t pt-3 mt-2">
+            <input class="p-2 border rounded" name="car.make" placeholder="Marque" />
+            <input class="p-2 border rounded" name="car.model" placeholder="Modèle" />
+            <input class="p-2 border rounded w-28" type="number" name="car.yearMin" placeholder="Année min" />
+            <input class="p-2 border rounded w-28" type="number" name="car.yearMax" placeholder="Année max" />
+        </div>
+
+        <!-- 💻 Exemple électronique -->
+        <div data-facet="electronics" class="hidden animate-fadeIn flex flex-wrap gap-2 border-t pt-3 mt-2">
+            <input class="p-2 border rounded" name="electronics.type" placeholder="Type (smartphone, laptop…)" />
+            <input class="p-2 border rounded" name="electronics.model" placeholder="Modèle" />
+        </div>
+        <!-- ... (idem pour toutes les autres catégories comme dans ton code) ... -->
+    </div>
+</form>
+
+<!-- SCRIPT facettes -->
+<script>
+    (function(){
+        const catSel = document.getElementById('fltCategory');
+        const facets = Array.from(document.querySelectorAll('[data-facet]'));
+
+        function toggleFacets(v){
+            facets.forEach(f => {
+                if(f.dataset.facet === v) {
+                    f.classList.remove('hidden');
+                } else {
+                    f.classList.add('hidden');
+                }
+            });
+        }
+        toggleFacets(catSel.value);
+        catSel.addEventListener('change', () => toggleFacets(catSel.value));
+    })();
+</script>
+
+<!-- RESULTATS ANNONCES -->
+<!-- RESULTATS ANNONCES -->
+<div class="w-full px-4 mx-auto grid gap-4 
+            grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 mt-8">
+    <article th:each="ad : ${page.content}"
+             class="bg-white rounded-lg shadow hover:shadow-lg overflow-hidden group transition transform hover:-translate-y-1">
+        <a th:href="@{'/ad/' + ${ad.id}}">
+            <div class="relative">
+                <img th:if="${ad.images != null and !ad.images.isEmpty()}"
+                     th:src="${ad.images.get(0).url}"
+                     alt=""
+                     class="w-full h-40 object-cover group-hover:scale-105 transition duration-300" />
+                <span class="absolute bottom-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">
+                    <span th:text="${ad.price + ' CHF'}"></span>
+                </span>
+            </div>
+            <div class="p-3">
+                <h3 class="font-semibold text-sm line-clamp-1" th:text="${ad.title}"></h3>
+                <p class="text-gray-500 text-xs line-clamp-2" th:text="${ad.description}"></p>
+            </div>
+        </a>
+    </article>
+</div>
+
+<!-- PAGINATION -->
+<div class="flex justify-center mt-8">
+  <nav class="flex flex-wrap gap-2 items-center text-sm bg-white p-3 rounded-lg shadow-md">
+
+    <!-- Précédent -->
+<a th:if="${page.page > 0}"
+   th:href="@{/ads(
+        page=${page.page - 1},
+        size=${page.size},
+        q=${q},
+        category=${category},
+        canton=${canton},
+    priceMin=${priceMin},
+    priceMax=${priceMax},
+        sort=${sort + ',' + dir}
+   )}"
+   class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">« Précédent</a>
+
+<!-- Numéro page 1 -->
+<a th:if="${page.totalPages > 0}"
+   th:href="@{/ads(
+        page=0,
+        size=${page.size},
+        q=${q},
+        category=${category},
+        canton=${canton},
+    priceMin=${priceMin},
+    priceMax=${priceMax},
+        sort=${sort + ',' + dir}
+   )}"
+   th:text="1"
+   th:classappend="${page.page == 0} ? ' bg-green-500 text-white ' : ' bg-gray-200 hover:bg-gray-300 '"
+   class="px-3 py-1 rounded cursor-pointer"></a>
+
+<!-- Pages autour -->
+<a th:each="i : ${#numbers.sequence(page.page-1, page.page+1)}"
+   th:if="${i > 0 and i < page.totalPages - 1}"
+   th:href="@{/ads(
+        page=${i},
+        size=${page.size},
+        q=${q},
+        category=${category},
+        canton=${canton},
+    priceMin=${priceMin},
+    priceMax=${priceMax},
+        sort=${sort + ',' + dir}
+   )}"
+   th:text="${i + 1}"
+   th:classappend="${i == page.page} ? ' bg-green-500 text-white ' : ' bg-gray-200 hover:bg-gray-300 '"
+   class="px-3 py-1 rounded cursor-pointer"></a>
+
+<!-- Dernière page -->
+<a th:if="${page.totalPages > 1}"
+   th:href="@{/ads(
+        page=${page.totalPages - 1},
+        size=${page.size},
+        q=${q},
+        category=${category},
+        canton=${canton},
+    priceMin=${priceMin},
+    priceMax=${priceMax},
+        sort=${sort + ',' + dir}
+   )}"
+   th:text="${page.totalPages}"
+   th:classappend="${page.page == page.totalPages - 1} ? ' bg-green-500 text-white ' : ' bg-gray-200 hover:bg-gray-300 '"
+   class="px-3 py-1 rounded cursor-pointer"></a>
+
+<!-- Suivant -->
+<a th:if="${page.page + 1 < page.totalPages}"
+   th:href="@{/ads(
+        page=${page.page + 1},
+        size=${page.size},
+        q=${q},
+        category=${category},
+        canton=${canton},
+    priceMin=${priceMin},
+    priceMax=${priceMax},
+        sort=${sort + ',' + dir}
+   )}"
+   class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Suivant »</a>
+
+    <!-- Aller à la page -->
+<form id="gotoPageForm" th:action="@{/ads}" method="get" class="flex items-center gap-2 ml-4">
+  <label for="gotoPageInput" class="text-gray-600 text-sm">Aller à la page :</label>
+
+  <!-- Champ visible (1-based pour l’utilisateur) -->
+  <input id="gotoPageInput"
+         type="number"
+         min="1"
+         th:attr="max=${page.totalPages}"
+         th:value="${page.page + 1}"
+         class="w-16 p-1 border rounded text-center focus:ring-2 focus:ring-green-400"
+         required />
+
+  <!-- Champ caché (envoyé au backend) -->
+  <input type="hidden" name="page" id="hiddenPageInput" th:value="${page.page}" />
+
+  <!-- Autres filtres conservés -->
+  <input type="hidden" name="size" th:value="${page.size}" />
+  <input type="hidden" name="q" th:value="${q}" />
+  <input type="hidden" name="category" th:value="${category}" />
+  <input type="hidden" name="canton" th:value="${canton}" />
+  <input type="hidden" name="priceMin" th:value="${priceMin}" />
+  <input type="hidden" name="priceMax" th:value="${priceMax}" />
+  <input type="hidden" name="sort" th:value="${sort + ',' + dir}" />
+
+  <button type="submit"
+          class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
+    OK
+  </button>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const gotoForm = document.getElementById('gotoPageForm');
+  const visibleInput = document.getElementById('gotoPageInput');
+  const hiddenInput = document.getElementById('hiddenPageInput');
+  
+  gotoForm.addEventListener('submit', () => {
+    const val = parseInt(visibleInput.value, 10);
+    if (!isNaN(val) && val > 0) {
+      hiddenInput.value = val - 1; // on modifie seulement le champ caché
+    }
+  });
+});
+</script>
+
+
+  </nav>
+</div>
+
+
+</body>
+</html>

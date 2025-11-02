@@ -1,0 +1,190 @@
+<!--?xml version="1.0" encoding="UTF-8"?-->
+<svg viewBox="0 0 1000 700" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Carte schématique des cantons suisses">
+  <defs>
+    <style>
+      .tile { fill:#f8fafc; stroke:#cbd5e1; stroke-width:2; rx:12; ry:12; }
+      .hit  { cursor:pointer; transition:all .15s ease; }
+      .hit:hover .tile { fill:#ffedd5; stroke:#fb923c; }
+      .code { font:700 16px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#0f172a; text-anchor:middle; }
+      .name { font:500 12px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#475569; text-anchor:middle; }
+    </style>
+  </defs>
+
+  <!--
+    Disposition en grille lisible (pas géographique).
+    Chaque canton est un <a><g id="XX">…</g></a> avec:
+      - id = code du canton (XX)
+      - data-name = nom complet (utile si tu veux l'afficher au survol)
+      - lien /ads?canton=XX
+  -->
+
+  <!-- Ligne 1 -->
+  <a href="/ads?canton=GE"><g id="GE" class="hit" data-name="Genève" transform="translate(40,40)">
+    <rect class="tile" width="140" height="90" rx="12" ry="12"></rect>
+    <text class="code" x="70" y="40">GE</text>
+    <text class="name" x="70" y="64">Genève</text>
+  </g></a>
+
+  <a href="/ads?canton=VD"><g id="VD" class="hit" data-name="Vaud" transform="translate(200,40)">
+    <rect class="tile" width="140" height="90"></rect>
+    <text class="code" x="70" y="40">VD</text>
+    <text class="name" x="70" y="64">Vaud</text>
+  </g></a>
+
+  <a href="/ads?canton=FR"><g id="FR" class="hit" data-name="Fribourg" transform="translate(360,40)">
+    <rect class="tile" width="140" height="90"></rect>
+    <text class="code" x="70" y="40">FR</text>
+    <text class="name" x="70" y="64">Fribourg</text>
+  </g></a>
+
+  <a href="/ads?canton=NE"><g id="NE" class="hit" data-name="Neuchâtel" transform="translate(520,40)">
+    <rect class="tile" width="140" height="90"></rect>
+    <text class="code" x="70" y="40">NE</text>
+    <text class="name" x="70" y="64">Neuchâtel</text>
+  </g></a>
+
+  <a href="/ads?canton=JU"><g id="JU" class="hit" data-name="Jura" transform="translate(680,40)">
+    <rect class="tile" width="140" height="90"></rect>
+    <text class="code" x="70" y="40">JU</text>
+    <text class="name" x="70" y="64">Jura</text>
+  </g></a>
+
+  <!-- Ligne 2 -->
+  <a href="/ads?canton=VS"><g id="VS" class="hit" data-name="Valais" transform="translate(40,150)">
+    <rect class="tile" width="140" height="90"></rect>
+    <text class="code" x="70" y="40">VS</text>
+    <text class="name" x="70" y="64">Valais</text>
+  </g></a>
+
+  <a href="/ads?canton=BE"><g id="BE" class="hit" data-name="Berne" transform="translate(200,150)">
+    <rect class="tile" width="140" height="90"></rect>
+    <text class="code" x="70" y="40">BE</text>
+    <text class="name" x="70" y="64">Berne</text>
+  </g></a>
+
+  <a href="/ads?canton=SO"><g id="SO" class="hit" data-name="Soleure" transform="translate(360,150)">
+    <rect class="tile" width="140" height="90"></rect>
+    <text class="code" x="70" y="40">SO</text>
+    <text class="name" x="70" y="64">Soleure</text>
+  </g></a>
+
+  <a href="/ads?canton=BS"><g id="BS" class="hit" data-name="Bâle-Ville" transform="translate(520,150)">
+    <rect class="tile" width="140" height="90"></rect>
+    <text class="code" x="70" y="40">BS</text>
+    <text class="name" x="70" y="64">Bâle-Ville</text>
+  </g></a>
+
+  <a href="/ads?canton=BL"><g id="BL" class="hit" data-name="Bâle-Campagne" transform="translate(680,150)">
+    <rect class="tile" width="140" height="90"></rect>
+    <text class="code" x="70" y="40">BL</text>
+    <text class="name" x="70" y="64">Bâle-Campagne</text>
+  </g></a>
+
+  <!-- Ligne 3 -->
+  <a href="/ads?canton=TI"><g id="TI" class="hit" data-name="Tessin" transform="translate(40,260)">
+    <rect class="tile" width="140" height="90"></rect>
+    <text class="code" x="70" y="40">TI</text>
+    <text class="name" x="70" y="64">Tessin</text>
+  </g></a>
+
+  <a href="/ads?canton=AG"><g id="AG" class="hit" data-name="Argovie" transform="translate(200,260)">
+    <rect class="tile" width="140" height="90"></rect>
+    <text class="code" x="70" y="40">AG</text>
+    <text class="name" x="70" y="64">Argovie</text>
+  </g></a>
+
+  <a href="/ads?canton=LU"><g id="LU" class="hit" data-name="Lucerne" transform="translate(360,260)">
+    <rect class="tile" width="140" height="90"></rect>
+    <text class="code" x="70" y="40">LU</text>
+    <text class="name" x="70" y="64">Lucerne</text>
+  </g></a>
+
+  <a href="/ads?canton=ZG"><g id="ZG" class="hit" data-name="Zoug" transform="translate(520,260)">
+    <rect class="tile" width="140" height="90"></rect>
+    <text class="code" x="70" y="40">ZG</text>
+    <text class="name" x="70" y="64">Zoug</text>
+  </g></a>
+
+  <a href="/ads?canton=ZH"><g id="ZH" class="hit" data-name="Zurich" transform="translate(680,260)">
+    <rect class="tile" width="140" height="90"></rect>
+    <text class="code" x="70" y="40">ZH</text>
+    <text class="name" x="70" y="64">Zurich</text>
+  </g></a>
+
+  <!-- Ligne 4 -->
+  <a href="/ads?canton=UR"><g id="UR" class="hit" data-name="Uri" transform="translate(40,370)">
+    <rect class="tile" width="140" height="90"></rect>
+    <text class="code" x="70" y="40">UR</text>
+    <text class="name" x="70" y="64">Uri</text>
+  </g></a>
+
+  <a href="/ads?canton=SZ"><g id="SZ" class="hit" data-name="Schwytz" transform="translate(200,370)">
+    <rect class="tile" width="140" height="90"></rect>
+    <text class="code" x="70" y="40">SZ</text>
+    <text class="name" x="70" y="64">Schwytz</text>
+  </g></a>
+
+  <a href="/ads?canton=OW"><g id="OW" class="hit" data-name="Obwald" transform="translate(360,370)">
+    <rect class="tile" width="140" height="90"></rect>
+    <text class="code" x="70" y="40">OW</text>
+    <text class="name" x="70" y="64">Obwald</text>
+  </g></a>
+
+  <a href="/ads?canton=NW"><g id="NW" class="hit" data-name="Nidwald" transform="translate(520,370)">
+    <rect class="tile" width="140" height="90"></rect>
+    <text class="code" x="70" y="40">NW</text>
+    <text class="name" x="70" y="64">Nidwald</text>
+  </g></a>
+
+  <a href="/ads?canton=GL"><g id="GL" class="hit" data-name="Glaris" transform="translate(680,370)">
+    <rect class="tile" width="140" height="90"></rect>
+    <text class="code" x="70" y="40">GL</text>
+    <text class="name" x="70" y="64">Glaris</text>
+  </g></a>
+
+  <!-- Ligne 5 -->
+  <a href="/ads?canton=ZG2" style="display:none"><g></g></a> <!-- placeholder nothing -->
+
+  <a href="/ads?canton=SH"><g id="SH" class="hit" data-name="Schaffhouse" transform="translate(200,480)">
+    <rect class="tile" width="140" height="90"></rect>
+    <text class="code" x="70" y="40">SH</text>
+    <text class="name" x="70" y="64">Schaffhouse</text>
+  </g></a>
+
+  <a href="/ads?canton=AR"><g id="AR" class="hit" data-name="Appenzell Rhodes-Extérieures" transform="translate(360,480)">
+    <rect class="tile" width="140" height="90"></rect>
+    <text class="code" x="70" y="36">AR</text>
+    <text class="name" x="70" y="60">App. Rh.-Ext.</text>
+  </g></a>
+
+  <a href="/ads?canton=AI"><g id="AI" class="hit" data-name="Appenzell Rhodes-Intérieures" transform="translate(520,480)">
+    <rect class="tile" width="140" height="90"></rect>
+    <text class="code" x="70" y="36">AI</text>
+    <text class="name" x="70" y="60">App. Rh.-Int.</text>
+  </g></a>
+
+  <a href="/ads?canton=TG"><g id="TG" class="hit" data-name="Thurgovie" transform="translate(680,480)">
+    <rect class="tile" width="140" height="90"></rect>
+    <text class="code" x="70" y="40">TG</text>
+    <text class="name" x="70" y="64">Thurgovie</text>
+  </g></a>
+
+  <!-- Ligne 6 -->
+  <a href="/ads?canton=GR"><g id="GR" class="hit" data-name="Grisons" transform="translate(40,590)">
+    <rect class="tile" width="140" height="90"></rect>
+    <text class="code" x="70" y="40">GR</text>
+    <text class="name" x="70" y="64">Grisons</text>
+  </g></a>
+
+  <a href="/ads?canton=SG"><g id="SG" class="hit" data-name="Saint-Gall" transform="translate(200,590)">
+    <rect class="tile" width="140" height="90"></rect>
+    <text class="code" x="70" y="40">SG</text>
+    <text class="name" x="70" y="64">Saint-Gall</text>
+  </g></a>
+
+  <a href="/ads?canton=GL2" style="display:none"><g></g></a> <!-- placeholder nothing -->
+
+  <a href="/ads?canton=ZH2" style="display:none"><g></g></a> <!-- placeholder nothing -->
+
+  <a href="/ads?canton=BS2" style="display:none"><g></g></a> <!-- placeholder nothing -->
+</svg>

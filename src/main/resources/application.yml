@@ -1,0 +1,21 @@
+server:
+  port: 8080
+
+spring:
+  web:
+    locale: fr_CH
+    locale-resolver: fixed
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/annonces
+      database: annonces
+  thymeleaf:
+    cache: false
+
+app:
+  jwt:
+    issuer: annonces-app
+    secret: "change-me-please-very-long-secret-key"
+    expiration: 86400  # 1 jour en secondes
+  upload:
+    dir: ${user.home}/annonces-uploads

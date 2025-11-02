@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="fr"
+      th:replace="~{fragments/_layout :: base(~{::body})}">
+<body class="bg-gray-50">
+
+<div class="max-w-6xl mx-auto p-4 sm:p-8 space-y-10">
+
+    <!-- HEADER PROFIL -->
+    <div class="bg-gradient-to-r from-orange-500 to-red-600 text-white p-6 rounded-2xl shadow-lg">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-6 text-center sm:text-left">
+            <!-- Avatar -->
+            <div class="mx-auto sm:mx-0 w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-md flex items-center justify-center bg-white">
+                <img th:if="${user.photoUrl != null}" th:src="@{${user.photoUrl}}" alt="Avatar" class="w-full h-full object-cover"/>
+                <span th:if="${user.photoUrl == null}"
+                      th:text="${user.firstName != null ? user.firstName.substring(0,1) : 'U'}"
+                      class="text-4xl font-bold text-orange-600">U</span>
+            </div>
+            <!-- Infos -->
+            <div class="mt-4 sm:mt-0">
+                <h1 class="text-2xl sm:text-3xl font-extrabold" th:text="${user.firstName + ' ' + user.lastName}">Utilisateur</h1>
+                <p class="text-sm opacity-90" th:text="${user.email}">email@exemple.com</p>
+                <p class="text-sm opacity-90" th:text="${user.phone}">+41 ...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FORMULAIRE PROFIL -->
+    <div class="bg-white p-6 rounded-xl shadow-md">
+        <h2 class="text-lg sm:text-xl font-bold mb-4 text-gray-700">Modifier mes informations</h2>
+        <form th:action="@{/profile}" th:object="${user}" method="post" enctype="multipart/form-data" class="space-y-6">
+
+            <!-- Photo -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Photo de profil</label>
+                <input type="file" name="photoFile" accept="image/*"
+                       class="mt-2 w-full border rounded-lg p-2 file:mr-4 file:py-2 file:px-4
+                              file:rounded-full file:border-0 file:text-sm file:font-semibold
+                              file:bg-orange-50 file:text-orange-600 hover:file:bg-orange-100"/>
+            </div>
+
+            <!-- Nom & prénom -->
+            <div class="grid sm:grid-cols-2 gap-4">
+                <label>
+                    <span class="block text-sm font-medium text-gray-700">Prénom</span>
+                    <input type="text" th:field="*{firstName}"
+                           class="mt-2 border rounded-lg p-3 w-full focus:ring-2 focus:ring-orange-500"/>
+                </label>
+                <label>
+                    <span class="block text-sm font-medium text-gray-700">Nom</span>
+                    <input type="text" th:field="*{lastName}"
+                           class="mt-2 border rounded-lg p-3 w-full focus:ring-2 focus:ring-orange-500"/>
+                </label>
+            </div>
+
+            <!-- Email (readonly) & Téléphone -->
+            <div class="grid sm:grid-cols-2 gap-4">
+                <label>
+                    <span class="block text-sm font-medium text-gray-700">Email</span>
+                    <input type="text" th:value="${user.email}" disabled
+                           class="mt-2 border rounded-lg p-3 w-full bg-gray-100"/>
+                </label>
+                <label>
+                    <span class="block text-sm font-medium text-gray-700">Téléphone</span>
+                    <input type="text" th:field="*{phone}" placeholder="+41 79 123 45 67"
+                           class="mt-2 border rounded-lg p-3 w-full focus:ring-2 focus:ring-orange-500"/>
+                </label>
+            </div>
+
+            <!-- Bouton -->
+            <div class="flex justify-end">
+                <button type="submit"
+                        class="bg-gradient-to-r from-orange-500 to-red-600 text-white font-semibold px-6 py-2 rounded-lg shadow hover:scale-105 transition">
+                    Sauvegarder
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- FILTRES -->
+    <div class="bg-white p-6 rounded-xl shadow-md">
+        <h2 class="text-lg sm:text-xl font-bold mb-4 text-gray-700">Filtrer mes annonces</h2>
+        <form th:action="@{/profile}" method="get" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+            <input type="text" name="title" th:value="${param.title}" placeholder="Titre"
+                   class="border rounded-lg p-2 focus:ring-2 focus:ring-orange-500"/>
+            <input type="text" name="category" th:value="${param.category}" placeholder="Catégorie"
+                   class="border rounded-lg p-2 focus:ring-2 focus:ring-orange-500"/>
+            <div class="flex space-x-2">
+                <input type="number" name="minPrice" th:value="${param.minPrice}" placeholder="Min"
+                       class="w-1/2 border rounded-lg p-2 focus:ring-2 focus:ring-orange-500"/>
+                <input type="number" name="maxPrice" th:value="${param.maxPrice}" placeholder="Max"
+                       class="w-1/2 border rounded-lg p-2 focus:ring-2 focus:ring-orange-500"/>
+            </div>
+            <input type="date" name="fromDate" th:value="${param.fromDate}"
+                   class="border rounded-lg p-2 focus:ring-2 focus:ring-orange-500"/>
+            <input type="date" name="toDate" th:value="${param.toDate}"
+                   class="border rounded-lg p-2 focus:ring-2 focus:ring-orange-500"/>
+            <div class="sm:col-span-2 md:col-span-5 flex justify-end">
+                <button type="submit"
+                        class="bg-blue-600 text-white px-5 py-2 rounded-lg shadow hover:bg-blue-700 transition w-full sm:w-auto">
+                    Filtrer
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- LISTE DES ANNONCES -->
+    <div class="bg-white rounded-xl shadow-lg overflow-x-auto">
+        <table class="w-full border-collapse min-w-[600px]">
+            <thead class="bg-gray-50 text-gray-600 uppercase text-xs font-semibold">
+            <tr>
+                <th class="p-3 text-left">Titre</th>
+                <th class="p-3 text-left">Catégorie</th>
+                <th class="p-3 text-right">Prix</th>
+                <th class="p-3 text-left">Publié</th>
+                <th class="p-3 text-center">Actions</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+            <tr th:each="ad : ${ads}" class="hover:bg-gray-50 transition">
+                <td class="p-3">
+                    <a th:href="@{/ad/{id}(id=${ad.id})}" class="font-medium text-blue-600 hover:underline"
+                       th:text="${ad.title}">Titre</a>
+                </td>
+                <td class="p-3" th:text="${ad.category}">Catégorie</td>
+                <td class="p-3 text-right font-semibold text-gray-800"
+                    th:text="|${#numbers.formatDecimal(ad.price,0,'NONE',2,'POINT')} CHF|">0 CHF</td>
+                <td class="p-3 text-gray-500"
+                    th:text="${#temporals.format(ad.createdAt, 'dd/MM/yyyy')}">01/01/2025</td>
+                <td class="p-3 text-center flex flex-col sm:flex-row sm:justify-center gap-2">
+                    <a th:href="@{/ad/edit/{id}(id=${ad.id})}"
+                       class="px-3 py-1 text-sm rounded-lg bg-yellow-100 text-yellow-700 hover:bg-yellow-200">
+                        Modifier
+                    </a>
+                    <form th:action="@{/ad/delete/{id}(id=${ad.id})}" method="post" class="inline">
+                        <button type="submit"
+                                class="px-3 py-1 text-sm rounded-lg bg-red-100 text-red-700 hover:bg-red-200"
+                                onclick="return confirm('Supprimer cette annonce ?')">
+                            Supprimer
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(ads)}">
+                <td colspan="5" class="text-center py-6 text-gray-400">Aucune annonce trouvée</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>

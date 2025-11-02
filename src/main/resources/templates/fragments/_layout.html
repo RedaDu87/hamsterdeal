@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="fr"
+      th:fragment="base(content)">
+<head>
+    <meta charset="UTF-8" />
+    <title th:text="${title} ?: 'Annonces'">Annonces</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#77ca22',
+                        secondary: '#1f2937'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- SwiperJS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const swiperThumbs = new Swiper(".mySwiper", {
+      loop: true,
+      spaceBetween: 10,
+      slidesPerView: 6,
+      freeMode: true,
+      watchSlidesProgress: true,
+    });
+    const swiperMain = new Swiper(".mySwiper2", {
+      loop: true,
+      spaceBetween: 10,
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+      thumbs: {
+        swiper: swiperThumbs,
+      },
+    });
+  });
+</script>
+
+</head>
+<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
+
+<!-- HEADER (compact) -->
+<header class="sticky top-0 z-50 bg-white/90 backdrop-blur shadow-md">
+  <div class="container mx-auto px-4 py-1.5 flex justify-between items-center">
+    <!-- Logo -->
+    <a class="text-xl font-extrabold text-primary hover:scale-105 transition" th:href="@{/}">
+      <svg xmlns="http://www.w3.org/2000/svg" width="160" height="36" viewBox="0 0 280 60">
+        <!-- Tête Nibble -->
+        <circle cx="30" cy="30" r="20" fill="#fbbf24"/>
+        <circle cx="20" cy="15" r="6" fill="#fbbf24"/>
+        <circle cx="40" cy="15" r="6" fill="#fbbf24"/>
+        <!-- Yeux -->
+        <circle cx="23" cy="28" r="6" fill="white"/>
+        <circle cx="37" cy="28" r="6" fill="white"/>
+        <circle cx="23" cy="28" r="3" fill="black"/>
+        <circle cx="37" cy="28" r="3" fill="black"/>
+
+        <!-- Texte -->
+        <text x="65" y="37" font-family="Poppins, Arial, sans-serif" font-weight="700" font-size="22" fill="#77ca22">HamsterDeal</text>
+        <!-- <text x="235" y="37" font-family="Poppins, Arial, sans-serif" font-weight="700" font-size="22" fill="#374151">.ch</text> -->
+      </svg>
+    </a>
+
+    <!-- Desktop Nav -->
+    <nav class="hidden md:flex items-center gap-4 text-sm font-medium">
+      <a th:href="@{/ads}" class="hover:text-primary transition">Parcourir</a>
+      <a th:href="@{/ad/new}" class="bg-gradient-to-r from-primary to-green-600 text-white px-3 py-1.5 rounded-md shadow hover:scale-105 transition">
+        Déposer une annonce
+      </a>
+
+      <!-- Authenticated -->
+      <div th:if="${isAuthenticated}" class="flex items-center gap-3">
+        <span th:text="${user != null ? user.firstName + ' ' + user.lastName : 'Invité'}"></span>
+
+        <a th:href="@{/profile}" class="flex items-center">
+          <div class="w-8 h-8 rounded-full overflow-hidden bg-primary text-white flex items-center justify-center font-bold shadow">
+            <img th:if="${user.photoUrl != null}" th:src="@{${user.photoUrl}}" alt="Avatar" class="w-full h-full object-cover"/>
+            <span th:if="${user.photoUrl == null}" th:text="${user.firstName != null ? user.firstName.substring(0,1) : 'U'}">U</span>
+          </div>
+        </a>
+
+        <form th:action="@{/logout}" method="post">
+          <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-2.5 py-1 rounded-md shadow text-xs">
+            Déconnexion
+          </button>
+        </form>
+      </div>
+
+      <!-- Guest -->
+      <div th:if="${!isAuthenticated}" class="flex gap-2">
+        <a th:href="@{/login}" class="bg-primary hover:bg-green-700 text-white px-3 py-1.5 rounded-md shadow text-sm">Connexion</a>
+        <a th:href="@{/register}" class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1.5 rounded-md shadow text-sm">Inscription</a>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu Button -->
+    <button id="menu-btn" class="md:hidden p-1.5 rounded-md bg-gray-100 hover:bg-gray-200">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile Nav -->
+  <nav id="mobile-menu" class="hidden md:hidden bg-white border-t shadow-lg">
+    <div class="flex flex-col p-3 space-y-2 text-sm">
+      <a th:href="@{/ads}" class="hover:text-primary">Parcourir</a>
+      <a th:href="@{/ad/new}" class="bg-primary text-white px-3 py-1.5 rounded-md text-center shadow">Déposer une annonce</a>
+
+      <div th:if="${isAuthenticated}" class="flex items-center gap-2 border-t pt-2">
+        <div class="w-8 h-8 rounded-full overflow-hidden bg-primary text-white flex items-center justify-center font-bold">
+          <img th:if="${user.photoUrl != null}" th:src="@{${user.photoUrl}}" alt="Avatar" class="w-full h-full object-cover"/>
+          <span th:if="${user.photoUrl == null}" th:text="${user.firstName != null ? user.firstName.substring(0,1) : 'U'}">U</span>
+        </div>
+        <span th:text="${user.email}" class="text-gray-600 text-sm"></span>
+        <form th:action="@{/logout}" method="post" class="ml-auto">
+          <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-md text-xs">Déconnexion</button>
+        </form>
+      </div>
+
+      <div th:if="${!isAuthenticated}" class="flex gap-2 pt-2 border-t">
+        <a th:href="@{/login}" class="bg-primary text-white px-3 py-1.5 rounded-md flex-1 text-center text-sm">Connexion</a>
+        <a th:href="@{/register}" class="bg-gray-600 text-white px-3 py-1.5 rounded-md flex-1 text-center text-sm">Inscription</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+
+<!-- MAIN -->
+<main class="container mx-auto px-4 py-8 flex-grow" th:insert="${content}"></main>
+
+<!-- FOOTER -->
+<footer class="bg-gradient-to-r from-secondary to-gray-900 text-gray-300 mt-8">
+    <div class="container mx-auto px-4 py-6 flex flex-col sm:flex-row justify-between items-center text-sm">
+        <p>© [[${#dates.format(#dates.createNow(),'yyyy')}]] — Annonces</p>
+        <div class="flex gap-4 mt-4 sm:mt-0">
+            <a href="#" class="hover:text-white">Facebook</a>
+            <a href="#" class="hover:text-white">Twitter</a>
+            <a href="#" class="hover:text-white">Instagram</a>
+        </div>
+    </div>
+</footer>
+
+<!-- SCRIPT MENU -->
+<script>
+    const btn = document.getElementById("menu-btn");
+    const menu = document.getElementById("mobile-menu");
+    btn.addEventListener("click", () => {
+        menu.classList.toggle("hidden");
+    });
+</script>
+
+</body>
+</html>

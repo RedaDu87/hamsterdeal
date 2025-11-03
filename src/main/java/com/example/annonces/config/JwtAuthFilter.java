@@ -40,6 +40,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String token = null;
 
+        String path = req.getRequestURI();
+        if (path.startsWith("/ad/") || path.startsWith("/ads") || path.equals("/")) {
+            chain.doFilter(req, res);
+            return;
+        }
+
         // 1) Cherche dans le cookie
         if (req.getCookies() != null) {
             token = Arrays.stream(req.getCookies())

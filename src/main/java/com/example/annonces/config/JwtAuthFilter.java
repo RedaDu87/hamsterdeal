@@ -18,9 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -38,9 +36,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws ServletException, IOException {
 
+        String path = req.getRequestURI();
+
+        // 🟢 Étape 1 : ignorer les routes publiques
+        if (isPublicPath(path)) {
+            chain.doFilter(req, res);
+            return;
+        }
+
         String token = null;
 
-        // 1) Cherche dans le cookie
+        // 🔹 2) Cherche dans le cookie
         if (req.getCookies() != null) {
             token = Arrays.stream(req.getCookies())
                     .filter(c -> "AUTH".equals(c.getName()))
@@ -49,7 +55,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     .orElse(null);
         }
 
-        // 2) Sinon, cherche dans le header Authorization
+        // 🔹 3) Sinon, cherche dans le header Authorization
         if (token == null) {
             String header = req.getHeader(HttpHeaders.AUTHORIZATION);
             if (header != null && header.startsWith("Bearer ")) {
@@ -57,6 +63,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             }
         }
 
+        // 🔒 4) Validation du token
         if (token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {
                 Claims claims = jwt.parse(token).getBody();
@@ -94,12 +101,26 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         chain.doFilter(req, res);
     }
 
+    // 🧭 Méthode utilitaire pour définir les endpoints publics
+    private boolean isPublicPath(String path) {
+        return path.startsWith("/ad/")
+                || path.equals("/")
+                || path.startsWith("/ads")
+                || path.startsWith("/api/auth")
+                || path.startsWith("/api/geo")
+                || path.startsWith("/css")
+                || path.startsWith("/js")
+                || path.startsWith("/uploads")
+                || path.startsWith("/profiles")
+                || path.equals("/favicon.ico");
+    }
+
     private void clearAuthCookie(HttpServletResponse res) {
         Cookie expired = new Cookie("AUTH", "");
         expired.setPath("/");
-        expired.setMaxAge(0); // Supprime le cookie immédiatement
+        expired.setMaxAge(0);
         expired.setHttpOnly(true);
-        expired.setSecure(false); // mettre true en prod si HTTPS
+        expired.setSecure(false); // true si HTTPS
         res.addCookie(expired);
     }
 }

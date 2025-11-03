@@ -31,7 +31,7 @@ public class SecurityConfig {
                                                 // --- Fichiers statiques et uploads accessibles publiquement ---
                                                 .requestMatchers("/api/geo/**").permitAll()
                                                 .requestMatchers(
-                                                                "/", "/ads", "/ad/{id}", "/login", "/register",
+                                                                "/", "/ads", "/ad/**", "/login", "/register",
                                                                 "/css/**", "/js/**", "/uploads/**", "/profiles/**",
                                                                 "/favicon.ico", "/api/auth/**")
                                                 .permitAll()

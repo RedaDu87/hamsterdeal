@@ -47,13 +47,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         // 1) Cherche dans le cookie
-        if (req.getCookies() != null) {
-            token = Arrays.stream(req.getCookies())
-                    .filter(c -> "AUTH".equals(c.getName()))
-                    .map(Cookie::getValue)
-                    .findFirst()
-                    .orElse(null);
-        }
+        // if (req.getCookies() != null) {
+        // token = Arrays.stream(req.getCookies())
+        // .filter(c -> "AUTH".equals(c.getName()))
+        // .map(Cookie::getValue)
+        // .findFirst()
+        // .orElse(null);
+        // }
 
         // 2) Sinon, cherche dans le header Authorization
         if (token == null) {

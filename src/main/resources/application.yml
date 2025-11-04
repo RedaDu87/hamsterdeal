@@ -19,4 +19,4 @@ app:
     expiration: 86400  # 1 jour en secondes
   upload:
     #dir: ${user.home}/annonces-uploads
-    dir: ${APP_UPLOAD_DIR:/app/uploads}
+    dir: var/www/annonces/uploads

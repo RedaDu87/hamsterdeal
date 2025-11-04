@@ -7,6 +7,7 @@ import com.example.annonces.repo.AdRepository;
 import com.example.annonces.repo.UserRepository;
 import com.example.annonces.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -37,6 +38,9 @@ public class ProfileController {
     private final UserRepository userRepo;
 
     private final AdRepository adRepo;
+
+    @Value("${app.upload.dir}")
+    private String uploadRoot;
 
     public ProfileController(UserRepository userRepo, AdRepository adRepo) {
         this.userRepo = userRepo;
@@ -120,17 +124,19 @@ public class ProfileController {
 
         if (!photoFile.isEmpty()) {
             try {
-                // 📁 On stocke la photo de profil dans app.upload.dir/profile-photos
-                Path uploadDir = Paths.get(System.getProperty("user.home"), "annonces-uploads", "profile-photos");
-                if (!Files.exists(uploadDir))
-                    Files.createDirectories(uploadDir);
+                // 📂 Dossier où stocker la photo : app.upload.dir/profile-photos
+                Path profileDir = Paths.get(uploadRoot, "profile-photos");
+                if (!Files.exists(profileDir)) {
+                    Files.createDirectories(profileDir);
+                }
 
                 String filename = UUID.randomUUID() + "_" + photoFile.getOriginalFilename();
-                Path filePath = uploadDir.resolve(filename);
+                Path filePath = profileDir.resolve(filename);
+
                 Files.copy(photoFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-                // ✅ URL publique cohérente avec WebConfig
                 user.setPhotoUrl("/profiles/" + filename);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

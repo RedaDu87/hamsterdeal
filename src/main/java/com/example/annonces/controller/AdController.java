@@ -85,8 +85,15 @@ public class AdController {
         }
         model.addAttribute("ad", ad);
         List<ImageRef> images = ad.getImages();
-        List<ImageRef> thumbnails = images.size() > 6 ? images.subList(1, 6) : images.subList(1, images.size());
+        List<ImageRef> thumbnails = List.of(); // valeur par défaut
+
+        if (images != null && images.size() > 1) {
+            int end = Math.min(images.size(), 6); // max 6 images
+            thumbnails = images.subList(1, end);
+        }
+
         model.addAttribute("thumbnails", thumbnails);
+
         // 🔥 rechercher le vendeur par email (ownerId)
         if (ad.getOwnerId() != null) {
             userRepo.findByEmail(ad.getOwnerId())

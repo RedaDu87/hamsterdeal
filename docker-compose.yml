@@ -31,7 +31,7 @@ services:
       - APP_JWT_EXPIRATION=86400
       - APP_UPLOAD_DIR=/app/uploads
     volumes:
-      - uploads_data:/app/uploads
+      - /var/www/annonces/uploads:/app/uploads
     deploy:
       mode: replicated
       replicas: 2
@@ -44,4 +44,3 @@ services:
         constraints: [node.role == manager]
 volumes:
   mongo_data:
-  uploads_data:

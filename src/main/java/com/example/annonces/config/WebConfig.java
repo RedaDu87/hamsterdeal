@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Configuration
@@ -15,20 +16,17 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Dossier général des uploads (annonces, etc.)
-        String uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize().toString();
-        if (!uploadPath.endsWith("/"))
-            uploadPath += "/";
 
-        // Dossier spécifique aux photos de profil
-        String profilePath = Paths.get(uploadPath, "profile-photos").toAbsolutePath().normalize().toString();
-        if (!profilePath.endsWith("/"))
-            profilePath += "/";
+        Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
 
-        registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:" + uploadPath);
+        // /uploads/** → fichiers dans /app/uploads
+        registry
+                .addResourceHandler("/uploads/**")
+                .addResourceLocations("file:" + uploadPath.toString() + "/");
 
-        registry.addResourceHandler("/profiles/**")
-                .addResourceLocations("file:" + profilePath);
+        // Optionnel profil : seulement si tu utilises
+        registry
+                .addResourceHandler("/profiles/**")
+                .addResourceLocations("file:" + uploadPath.toString() + "/profile-photos/");
     }
 }

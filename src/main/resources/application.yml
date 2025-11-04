@@ -18,4 +18,5 @@ app:
     secret: "change-me-please-very-long-secret-key"
     expiration: 86400  # 1 jour en secondes
   upload:
-    dir: ${user.home}/annonces-uploads
+    #dir: ${user.home}/annonces-uploads
+    dir: ${APP_UPLOAD_DIR:/app/uploads}

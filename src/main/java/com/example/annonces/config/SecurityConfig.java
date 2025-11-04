@@ -31,7 +31,7 @@ public class SecurityConfig {
                                                 // --- Fichiers statiques et uploads accessibles publiquement ---
                                                 .requestMatchers("/api/geo/**").permitAll()
                                                 .requestMatchers(
-                                                                "/", "/ads", "/ad/**", "/login", "/register",
+                                                                "/", "/ads/**", "/ad/**", "/login", "/register",
                                                                 "/css/**", "/js/**", "/uploads/**", "/profiles/**",
                                                                 "/favicon.ico", "/api/auth/**")
                                                 .permitAll()
@@ -45,6 +45,7 @@ public class SecurityConfig {
 
                                                 // --- Tout le reste ---
                                                 .anyRequest().authenticated())
+
                                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
                 return http.build();

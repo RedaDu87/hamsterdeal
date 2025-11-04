@@ -10,49 +10,62 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
 
-        private final JwtAuthFilter jwtAuthFilter;
+    private final JwtAuthFilter jwtAuthFilter;
 
-        public SecurityConfig(JwtAuthFilter f) {
-                this.jwtAuthFilter = f;
-        }
+    public SecurityConfig(JwtAuthFilter f) {
+        this.jwtAuthFilter = f;
+    }
 
-        @Bean
-        SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-                http
-                                .csrf(AbstractHttpConfigurer::disable)
-                                .logout(AbstractHttpConfigurer::disable)
-                                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                                .authorizeHttpRequests(auth -> auth
-                                                // --- Fichiers statiques et uploads accessibles publiquement ---
-                                                .requestMatchers("/api/geo/**").permitAll()
-                                                .requestMatchers(
-                                                                "/", "/ads/**", "/ad/**", "/login", "/register",
-                                                                "/css/**", "/js/**", "/uploads/**", "/profiles/**",
-                                                                "/favicon.ico", "/api/auth/**")
-                                                .permitAll()
+    @Bean
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // <--- AJOUT IMPORTANT
+                .logout(AbstractHttpConfigurer::disable)
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/geo/**").permitAll()
+                        .requestMatchers("/", "/ads/**", "/ad/**", "/login", "/register",
+                                "/css/**", "/js/**", "/uploads/**", "/profiles/**",
+                                "/favicon.ico", "/api/auth/**")
+                        .permitAll()
+                        .requestMatchers(
+                                "/ad/new", "/ad/save", "/ad/edit/**", "/ad/update/**",
+                                "/ad/delete/**", "/ad/my", "/profile",
+                                "/api/ads/search")
+                        .authenticated()
+                        .anyRequest().authenticated())
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-                                                // --- Pages nécessitant une authentification ---
-                                                .requestMatchers(
-                                                                "/ad/new", "/ad/save", "/ad/edit/**", "/ad/update/**",
-                                                                "/ad/delete/**", "/ad/my", "/profile",
-                                                                "/api/ads/search")
-                                                .authenticated()
+        return http.build();
+    }
 
-                                                // --- Tout le reste ---
-                                                .anyRequest().authenticated())
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.setAllowedOrigins(List.of("http://localhost:8080")); // <<< ton host Thymeleaf
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));
 
-                                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/api/**", config); // <<< seulement pour l'API REST
+        return source;
+    }
 
-                return http.build();
-        }
 
-        @Bean
-        AuthenticationManager authenticationManager(AuthenticationConfiguration cfg) throws Exception {
-                return cfg.getAuthenticationManager();
-        }
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration cfg) throws Exception {
+        return cfg.getAuthenticationManager();
+    }
 }

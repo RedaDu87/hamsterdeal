@@ -40,22 +40,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String token = null;
 
-        String path = req.getRequestURI();
-        if (path.startsWith("/ad/") || path.startsWith("/ads") || path.equals("/")) {
-            chain.doFilter(req, res);
-            return;
+        if (req.getCookies() != null) {
+            token = Arrays.stream(req.getCookies())
+                    .filter(c -> "AUTH".equals(c.getName()))
+                    .map(Cookie::getValue)
+                    .findFirst()
+                    .orElse(null);
         }
 
-        // 1) Cherche dans le cookie
-        // if (req.getCookies() != null) {
-        // token = Arrays.stream(req.getCookies())
-        // .filter(c -> "AUTH".equals(c.getName()))
-        // .map(Cookie::getValue)
-        // .findFirst()
-        // .orElse(null);
-        // }
-
-        // 2) Sinon, cherche dans le header Authorization
         if (token == null) {
             String header = req.getHeader(HttpHeaders.AUTHORIZATION);
             if (header != null && header.startsWith("Bearer ")) {
@@ -67,45 +59,37 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             try {
                 Claims claims = jwt.parse(token).getBody();
 
-                // Vérifie expiration
                 if (claims.getExpiration().before(new Date())) {
-                    clearAuthCookie(res);
-                    res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    return;
+                    clearAuthCookie(res); // <-- Cookie expiré → on l'efface
+                } else {
+                    String email = claims.getSubject();
+                    User u = users.findByEmail(email).orElse(null);
+
+                    if (u != null) {
+                        Set<SimpleGrantedAuthority> auth = u.getRoles().stream()
+                                .map(r -> new SimpleGrantedAuthority("ROLE_" + r.name()))
+                                .collect(Collectors.toSet());
+
+                        SecurityContextHolder.getContext().setAuthentication(
+                                new UsernamePasswordAuthenticationToken(email, null, auth));
+                    }
                 }
 
-                // Charge l'utilisateur
-                String email = claims.getSubject();
-                User u = users.findByEmail(email).orElse(null);
-                if (u != null) {
-                    Set<SimpleGrantedAuthority> auth = u.getRoles().stream()
-                            .map(r -> new SimpleGrantedAuthority("ROLE_" + r.name()))
-                            .collect(Collectors.toSet());
-
-                    var authentication = new UsernamePasswordAuthenticationToken(email, null, auth);
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }
-
-            } catch (ExpiredJwtException e) {
-                clearAuthCookie(res);
-                res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
             } catch (Exception e) {
-                clearAuthCookie(res);
-                res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
+                clearAuthCookie(res); // <-- On efface le cookie invalide
             }
         }
 
-        chain.doFilter(req, res);
+        chain.doFilter(req, res); // ✅ On laisse toujours passer la requête
     }
 
     private void clearAuthCookie(HttpServletResponse res) {
         Cookie expired = new Cookie("AUTH", "");
         expired.setPath("/");
-        expired.setMaxAge(0); // Supprime le cookie immédiatement
+        expired.setMaxAge(0);
         expired.setHttpOnly(true);
-        expired.setSecure(false); // mettre true en prod si HTTPS
+        expired.setSecure(false);
         res.addCookie(expired);
     }
+
 }

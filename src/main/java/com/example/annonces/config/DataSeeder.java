@@ -25,27 +25,6 @@ public class DataSeeder {
             adRepo.deleteAll();
             userRepo.deleteAll();
 
-            // --- 👤 Création des utilisateurs ---
-            User reda = new User();
-            reda.setEmail("reda.berkouch@outlook.com");
-            reda.setPasswordHash("{noop}password123"); // Pour tests sans encodage
-            reda.setRoles(Set.of(Role.ADMIN));
-            reda.setFirstName("Réda");
-            reda.setLastName("Berkouch");
-            reda.setPhone("+41 767 150 083");
-            reda.setPhotoUrl("https://i.pravatar.cc/150?img=5");
-
-            User lea = new User();
-            lea.setEmail("lea.martin@example.com");
-            lea.setPasswordHash("{noop}password123");
-            lea.setRoles(Set.of(Role.USER));
-            lea.setFirstName("Léa");
-            lea.setLastName("Martin");
-            lea.setPhone("+41 79 123 45 67");
-            lea.setPhotoUrl("https://i.pravatar.cc/150?img=32");
-
-            userRepo.saveAll(List.of(reda, lea));
-            System.out.println("✅ Utilisateurs ajoutés : Réda & Léa");
 
             // --- 📦 Génération d’annonces factices ---
             List<String> categories = Arrays.asList("car", "electronics", "home", "fashion");

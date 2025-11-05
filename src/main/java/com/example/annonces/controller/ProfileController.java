@@ -141,15 +141,6 @@ public class ProfileController {
                 e.printStackTrace();
             }
         }
-        // if (user.getPhotoUrl() != null) {
-        // try {
-        // Path oldPath = Paths.get(System.getProperty("user.home"), "annonces-uploads",
-        // "profile-photos", Paths.get(user.getPhotoUrl()).getFileName().toString());
-        // Files.deleteIfExists(oldPath);
-        // } catch (IOException e) {
-        // e.printStackTrace();
-        // }
-        // }
 
         userRepo.save(user);
         redirectAttributes.addFlashAttribute("message", "Profil mis à jour !");

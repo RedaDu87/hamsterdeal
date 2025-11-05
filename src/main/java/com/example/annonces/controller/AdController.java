@@ -64,7 +64,7 @@ public class AdController {
 
         Page<Ad> p = adService.list(page, size, q, category, canton, priceMin, priceMax, sortField, sortDir);
 
-        model.addAttribute("page", PageResponse.of(p));
+        model.addAttribute("result", PageResponse.of(p));
         model.addAttribute("q", q);
         model.addAttribute("category", category);
         model.addAttribute("canton", canton);

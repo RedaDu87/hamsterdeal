@@ -168,7 +168,7 @@
 <!-- RESULTATS ANNONCES -->
 <div class="w-full px-4 mx-auto grid gap-4 
             grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 mt-8">
-    <article th:each="ad : ${page.content}"
+    <article th:each="ad : ${result.content}"
              class="bg-white rounded-lg shadow hover:shadow-lg overflow-hidden group transition transform hover:-translate-y-1">
         <a th:href="@{'/ad/' + ${ad.id}}">
             <div class="relative">
@@ -193,10 +193,10 @@
   <nav class="flex flex-wrap gap-2 items-center text-sm bg-white p-3 rounded-lg shadow-md">
 
     <!-- Précédent -->
-<a th:if="${page.page > 0}"
+<a th:if="${result.page > 0}"
    th:href="@{/ads(
-        page=${page.page - 1},
-        size=${page.size},
+        page=${result.page - 1},
+        size=${result.size},
         q=${q},
         category=${category},
         canton=${canton},
@@ -207,10 +207,10 @@
    class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">« Précédent</a>
 
 <!-- Numéro page 1 -->
-<a th:if="${page.totalPages > 0}"
+<a th:if="${result.totalPages > 0}"
    th:href="@{/ads(
         page=0,
-        size=${page.size},
+        size=${result.size},
         q=${q},
         category=${category},
         canton=${canton},
@@ -219,15 +219,15 @@
         sort=${sort + ',' + dir}
    )}"
    th:text="1"
-   th:classappend="${page.page == 0} ? ' bg-green-500 text-white ' : ' bg-gray-200 hover:bg-gray-300 '"
+   th:classappend="${result.page == 0} ? ' bg-green-500 text-white ' : ' bg-gray-200 hover:bg-gray-300 '"
    class="px-3 py-1 rounded cursor-pointer"></a>
 
 <!-- Pages autour -->
-<a th:each="i : ${#numbers.sequence(page.page-1, page.page+1)}"
-   th:if="${i > 0 and i < page.totalPages - 1}"
+<a th:each="i : ${#numbers.sequence(result.page - 1 , result.page + 1 )}"
+   th:if="${i > 0 and i < result.totalPages - 1}"
    th:href="@{/ads(
         page=${i},
-        size=${page.size},
+        size=${result.size},
         q=${q},
         category=${category},
         canton=${canton},
@@ -236,14 +236,14 @@
         sort=${sort + ',' + dir}
    )}"
    th:text="${i + 1}"
-   th:classappend="${i == page.page} ? ' bg-green-500 text-white ' : ' bg-gray-200 hover:bg-gray-300 '"
+   th:classappend="${i == result.page} ? ' bg-green-500 text-white ' : ' bg-gray-200 hover:bg-gray-300 '"
    class="px-3 py-1 rounded cursor-pointer"></a>
 
 <!-- Dernière page -->
-<a th:if="${page.totalPages > 1}"
+<a th:if="${result.totalPages > 1}"
    th:href="@{/ads(
-        page=${page.totalPages - 1},
-        size=${page.size},
+        page=${result.totalPages - 1},
+        size=${result.size},
         q=${q},
         category=${category},
         canton=${canton},
@@ -251,15 +251,15 @@
     priceMax=${priceMax},
         sort=${sort + ',' + dir}
    )}"
-   th:text="${page.totalPages}"
-   th:classappend="${page.page == page.totalPages - 1} ? ' bg-green-500 text-white ' : ' bg-gray-200 hover:bg-gray-300 '"
+   th:text="${result.totalPages}"
+   th:classappend="${result.page == result.totalPages - 1} ? ' bg-green-500 text-white ' : ' bg-gray-200 hover:bg-gray-300 '"
    class="px-3 py-1 rounded cursor-pointer"></a>
 
 <!-- Suivant -->
-<a th:if="${page.page + 1 < page.totalPages}"
+<a th:if="${result.page + 1 < result.totalPages}"
    th:href="@{/ads(
-        page=${page.page + 1},
-        size=${page.size},
+        page=${result.page + 1},
+        size=${result.size},
         q=${q},
         category=${category},
         canton=${canton},
@@ -277,16 +277,16 @@
   <input id="gotoPageInput"
          type="number"
          min="1"
-         th:attr="max=${page.totalPages}"
-         th:value="${page.page + 1}"
+         th:attr="max=${result.totalPages}"
+         th:value="${result.page + 1}"
          class="w-16 p-1 border rounded text-center focus:ring-2 focus:ring-green-400"
          required />
 
   <!-- Champ caché (envoyé au backend) -->
-  <input type="hidden" name="page" id="hiddenPageInput" th:value="${page.page}" />
+  <input type="hidden" name="page" id="hiddenPageInput" th:value="${result.page}" />
 
   <!-- Autres filtres conservés -->
-  <input type="hidden" name="size" th:value="${page.size}" />
+  <input type="hidden" name="size" th:value="${result.size}" />
   <input type="hidden" name="q" th:value="${q}" />
   <input type="hidden" name="category" th:value="${category}" />
   <input type="hidden" name="canton" th:value="${canton}" />

@@ -91,7 +91,7 @@ services:
 
         # 🚀 Redirection www -> non-www (optionnelle)
         - "traefik.http.middlewares.www-redirect.redirectregex.regex=^https?://www\\.(.*)"
-        - "traefik.http.middlewares.www-redirect.redirectregex.replacement=https://$1"
+        - "traefik.http.middlewares.www-redirect.redirectregex.replacement=https://$$1"
         - "traefik.http.middlewares.www-redirect.redirectregex.permanent=true"
         - "traefik.http.routers.annonces.middlewares=www-redirect"
 

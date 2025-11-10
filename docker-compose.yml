@@ -5,9 +5,9 @@ services:
     image: traefik:v3.1
     command:
       # 🔹 Providers & Docker Swarm integration
-      - "--providers.docker.swarmmode=true"
-      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
-      - "--providers.docker.exposedbydefault=false"
+      - "--providers.swarm=true"
+      - "--providers.swarm.endpoint=unix:///var/run/docker.sock"
+      - "--providers.swarm.exposedByDefault=false"
 
       # 🔹 Entrypoints (HTTP + HTTPS)
       - "--entrypoints.web.address=:80"

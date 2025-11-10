@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6.0
+    volumes:
+      - /var/lib/mongodb_data:/data/db
+    ports:
+      - "27017:27017"
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.role == manager]
+
+  app:
+    image: anikondu87/annonces-app:latest   # ton image Docker Hub
+    depends_on:
+      - mongodb
+    ports:
+      - "80:8080"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/annonces
+      - SPRING_DATA_MONGODB_DATABASE=annonces
+      - SPRING_WEB_LOCALE=fr_CH
+      - SPRING_WEB_LOCALE_RESOLVER=fixed
+      - APP_JWT_ISSUER=annonces-app
+      - APP_JWT_SECRET=change-me-please-very-long-secret-key
+      - APP_JWT_EXPIRATION=86400
+      - APP_UPLOAD_DIR=/app/uploads
+    volumes:
+      - /var/www/annonces/uploads:/app/uploads
+    deploy:
+      mode: replicated
+      replicas: 2
+      restart_policy:
+        condition: any
+      update_config:
+        parallelism: 1
+        delay: 10s
+      placement:
+        constraints: [node.role == manager]
+volumes:
+  mongo_data:

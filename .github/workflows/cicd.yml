@@ -69,7 +69,7 @@ jobs:
             cd /home/${{ secrets.SSH_USER }}/hamsterdeal
 
             echo "📦 Pulling latest code..."
-            git pull origin main
+            git pull --rebase origin main
 
             echo "🐳 Pulling latest image from Docker Hub..."
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/annonces-app:latest

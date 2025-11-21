@@ -57,6 +57,13 @@ services:
         # ⚙️ Port interne du conteneur
         - "traefik.http.services.annonces.loadbalancer.server.port=8080"
 
+    networks:
+      - annonces
+
+
 volumes:
   mongo_data:
   traefik_letsencrypt:
+networks:
+  annonces:
+    external: true

@@ -13,6 +13,8 @@ services:
         condition: on-failure
       placement:
         constraints: [node.role == manager]
+    networks:
+      - annonces
 
   app:
     image: anikondu87/annonces-app:latest

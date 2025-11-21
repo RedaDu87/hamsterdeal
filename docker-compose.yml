@@ -29,10 +29,11 @@ services:
       labels:
         - "traefik.enable=true"
 
-        # ROUTAGE Traefik
+        # Router HTTPS
         - "traefik.http.routers.annonces.rule=Host(`hamsterdeal.ch`)"
         - "traefik.http.routers.annonces.entrypoints=websecure"
         - "traefik.http.routers.annonces.tls.certresolver=le"
 
-        # BACKEND port
+        # Service backend
         - "traefik.http.services.annonces.loadbalancer.server.port=8080"
+

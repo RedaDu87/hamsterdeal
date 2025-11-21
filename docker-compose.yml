@@ -32,7 +32,7 @@ services:
     volumes:
       - /var/www/annonces/uploads:/app/uploads
     ports:
-      - target: 8080
+      - target: 8081
 
     deploy:
       mode: replicated

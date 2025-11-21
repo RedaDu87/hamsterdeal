@@ -29,6 +29,8 @@ services:
       - APP_UPLOAD_DIR=/app/uploads
     volumes:
       - /var/www/annonces/uploads:/app/uploads
+    ports:
+      - target: 8080
 
     deploy:
       mode: replicated

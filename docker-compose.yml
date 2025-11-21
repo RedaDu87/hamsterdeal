@@ -1,24 +1,16 @@
 version: '3.8'
 
-networks:
-  traefik_net:
-    external: true
-  annonces_net:
-    external: true
-
-volumes:
-  mongodb_data:   # ❤️ volume PERSISTENT obligatoire
-    driver: local
-
 services:
 
   mongodb:
     image: mongo:6.0
-    networks:
-      - annonces_net
     volumes:
-      - mongodb_data:/data/db
+      - /var/lib/mongodb_data:/data/db
     deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
       placement:
         constraints: [node.role == manager]
 
@@ -26,21 +18,45 @@ services:
     image: anikondu87/annonces-app:latest
     depends_on:
       - mongodb
-    networks:
-      - annonces_net
-      - traefik_net
     environment:
       - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/annonces
       - SPRING_DATA_MONGODB_DATABASE=annonces
+      - SPRING_WEB_LOCALE=fr_CH
+      - SPRING_WEB_LOCALE_RESOLVER=fixed
+      - APP_JWT_ISSUER=annonces-app
+      - APP_JWT_SECRET=change-me-please-very-long-secret-key
+      - APP_JWT_EXPIRATION=86400
       - APP_UPLOAD_DIR=/app/uploads
     volumes:
       - /var/www/annonces/uploads:/app/uploads
+
     deploy:
+      mode: replicated
+      replicas: 2
+      restart_policy:
+        condition: any
+      update_config:
+        parallelism: 1
+        delay: 10s
       placement:
         constraints: [node.role == manager]
       labels:
         - "traefik.enable=true"
+
+        # 🌐 Domaine principal + www
         - "traefik.http.routers.annonces.rule=Host(`hamsterdeal.ch`) || Host(`www.hamsterdeal.ch`)"
         - "traefik.http.routers.annonces.entrypoints=websecure"
         - "traefik.http.routers.annonces.tls.certresolver=le"
+
+        # 🚀 Redirection www -> non-www (optionnelle)
+        - "traefik.http.middlewares.www-redirect.redirectregex.regex=^https?://www\\.(.*)"
+        - "traefik.http.middlewares.www-redirect.redirectregex.replacement=https://$$1"
+        - "traefik.http.middlewares.www-redirect.redirectregex.permanent=true"
+        - "traefik.http.routers.annonces.middlewares=www-redirect"
+
+        # ⚙️ Port interne du conteneur
         - "traefik.http.services.annonces.loadbalancer.server.port=8080"
+
+volumes:
+  mongo_data:
+  traefik_letsencrypt:

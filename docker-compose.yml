@@ -3,10 +3,15 @@ version: '3.8'
 networks:
   traefik_net:
     external: true
+  annonces_net:
+    external: true
 
 services:
+
   mongodb:
     image: mongo:6.0
+    networks:
+      - annonces_net
     deploy:
       placement:
         constraints: [node.role == manager]
@@ -15,12 +20,18 @@ services:
     image: anikondu87/annonces-app:latest
     depends_on:
       - mongodb
+
     networks:
-      - traefik_net
+      - annonces_net   # 👈 communication interne
+      - traefik_net    # 👈 exposition Traefik
+
     environment:
       - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/annonces
       - SPRING_DATA_MONGODB_DATABASE=annonces
       - APP_UPLOAD_DIR=/app/uploads
+
+    volumes:
+      - /var/www/annonces/uploads:/app/uploads
 
     deploy:
       placement:
@@ -28,8 +39,10 @@ services:
       labels:
         - "traefik.enable=true"
 
+        # Router
         - "traefik.http.routers.annonces.rule=Host(`hamsterdeal.ch`) || Host(`www.hamsterdeal.ch`)"
         - "traefik.http.routers.annonces.entrypoints=websecure"
         - "traefik.http.routers.annonces.tls.certresolver=le"
 
+        # 📌 Port interne de ton container
         - "traefik.http.services.annonces.loadbalancer.server.port=8080"

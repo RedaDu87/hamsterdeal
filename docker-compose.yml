@@ -48,14 +48,7 @@ services:
         - "traefik.http.routers.annonces.entrypoints=websecure"
         - "traefik.http.routers.annonces.tls.certresolver=le"
 
-        # 🚀 Redirection www -> non-www (optionnelle)
-        - "traefik.http.middlewares.www-redirect.redirectregex.regex=^https?://www\\.(.*)"
-        - "traefik.http.middlewares.www-redirect.redirectregex.replacement=https://$$1"
-        - "traefik.http.middlewares.www-redirect.redirectregex.permanent=true"
-        - "traefik.http.routers.annonces.middlewares=www-redirect"
 
-        # ⚙️ Port interne du conteneur
-        - "traefik.http.services.annonces.loadbalancer.server.port=8080"
 
     networks:
       - annonces

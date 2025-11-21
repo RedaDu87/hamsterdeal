@@ -7,7 +7,8 @@ networks:
     external: true
 
 volumes:
-  mongodb_data:
+  mongodb_data:   # ❤️ volume PERSISTENT obligatoire
+    driver: local
 
 services:
 
@@ -25,19 +26,15 @@ services:
     image: anikondu87/annonces-app:latest
     depends_on:
       - mongodb
-
     networks:
       - annonces_net
       - traefik_net
-
     environment:
       - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/annonces
       - SPRING_DATA_MONGODB_DATABASE=annonces
       - APP_UPLOAD_DIR=/app/uploads
-
     volumes:
       - /var/www/annonces/uploads:/app/uploads
-
     deploy:
       placement:
         constraints: [node.role == manager]

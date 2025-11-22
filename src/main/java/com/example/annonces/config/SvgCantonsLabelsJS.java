@@ -135,38 +135,48 @@ public class SvgCantonsLabelsJS {
             script.setAttribute("type", "text/ecmascript");
             script.setTextContent(
                     "const cantons = document.querySelectorAll('.canton');\n" +
+                            "\n" +
                             "cantons.forEach(c => {\n" +
-                            "  const id = c.id.replace('canton-', '');\n" +
-                            "  const labelBox = document.getElementById('label-box-' + id);\n" +
-                            "  const labelText = document.getElementById('label-text-' + id);\n" +
+                            "    const id = c.id.replace('canton-', '');\n" +
+                            "    const labelBox = document.getElementById('label-box-' + id);\n" +
+                            "    const labelText = document.getElementById('label-text-' + id);\n" +
                             "\n" +
-                            "  function show() {\n" +
-                            "    labelBox.classList.add('visible');\n" +
-                            "    labelText.classList.add('visible');\n" +
-                            "    c.classList.add('active');\n" +
-                            "  }\n" +
+                            "    // --- HOVER ÉVÉNEMENTS ---\n" +
                             "\n" +
-                            "  function hide() {\n" +
-                            "    labelBox.classList.remove('visible');\n" +
-                            "    labelText.classList.remove('visible');\n" +
-                            "    c.classList.remove('active');\n" +
-                            "  }\n" +
+                            "    function hoverOn() {\n" +
+                            "        c.classList.add('active');\n" +
+                            "        labelBox.classList.add('visible');\n" +
+                            "        labelText.classList.add('visible');\n" +
+                            "    }\n" +
                             "\n" +
-                            "  c.addEventListener('mouseenter', show);\n" +
-                            "  c.addEventListener('mouseleave', (e) => {\n" +
-                            "    if (!labelBox.matches(':hover') && !labelText.matches(':hover')) hide();\n" +
-                            "  });\n" +
+                            "    function hoverOff() {\n" +
+                            "        c.classList.remove('active');\n" +
+                            "        labelBox.classList.remove('visible');\n" +
+                            "        labelText.classList.remove('visible');\n" +
+                            "    }\n" +
                             "\n" +
-                            "  labelBox.addEventListener('mouseenter', show);\n" +
-                            "  labelText.addEventListener('mouseenter', show);\n" +
+                            "    // Survol canton\n" +
+                            "    c.addEventListener('mouseenter', hoverOn);\n" +
+                            "    c.addEventListener('mouseleave', hoverOff);\n" +
                             "\n" +
-                            "  labelBox.addEventListener('mouseleave', (e) => {\n" +
-                            "    if (!c.matches(':hover')) hide();\n" +
-                            "  });\n" +
-                            "  labelText.addEventListener('mouseleave', (e) => {\n" +
-                            "    if (!c.matches(':hover')) hide();\n" +
-                            "  });\n" +
-                            "});"
+                            "    // Survol du label (rectangle + texte)\n" +
+                            "    labelBox.addEventListener('mouseenter', hoverOn);\n" +
+                            "    labelText.addEventListener('mouseenter', hoverOn);\n" +
+                            "\n" +
+                            "    labelBox.addEventListener('mouseleave', hoverOff);\n" +
+                            "    labelText.addEventListener('mouseleave', hoverOff);\n" +
+                            "\n" +
+                            "    // --- CLICK ÉVÉNEMENTS (même action) ---\n" +
+                            "    function onClick() {\n" +
+                            "        console.log(\"Click canton:\", id);\n" +
+                            "        // ICI tu mets ton action :\n" +
+                            "        // onCantonClick(id);\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    c.addEventListener('click', onClick);\n" +
+                            "    labelBox.addEventListener('click', onClick);\n" +
+                            "    labelText.addEventListener('click', onClick);\n" +
+                            "});\n"
             );
 
             doc.getDocumentElement().appendChild(script);

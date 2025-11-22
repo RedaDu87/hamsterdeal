@@ -553,3 +553,9 @@ video {
 [hidden]:where(:not([hidden="until-found"])) {
   display: none;
 }
+
+.canton.active {
+  fill:#90EE90 !important;
+  stroke:darkgreen !important;
+  stroke-width:3px !important;
+}

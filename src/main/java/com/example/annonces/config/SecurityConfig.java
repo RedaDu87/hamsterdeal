@@ -53,15 +53,25 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
+
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of("http://localhost:8080")); // <<< ton host Thymeleaf
+
+        config.setAllowedOrigins(List.of(
+                "https://hamsterdeal.ch",
+                "https://www.hamsterdeal.ch",
+                "http://localhost:8080"
+        ));
+
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setExposedHeaders(List.of("Authorization"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", config); // <<< seulement pour l'API REST
+        source.registerCorsConfiguration("/**", config);
+
         return source;
     }
+
 
 
     @Bean

@@ -401,12 +401,11 @@
         </div>
     </div>
 </section>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
+<script>document.addEventListener("DOMContentLoaded", () => {
     const cantons = document.querySelectorAll("svg .canton");
 
     cantons.forEach(c => {
-        const id = c.getAttribute("id"); // ex: VD, GE, ZH, BE
+        const id = c.getAttribute("id").replace("canton-", ""); // ex: "VD"
         c.style.fill = "white";
         c.style.stroke = "green";
         c.style.cursor = "pointer";
@@ -426,33 +425,35 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // 👇 Partie ajoutée : rendre tous les labels <text> cliquables sans modifier le SVG
-    const labels = document.querySelectorAll("svg text");
+    // 🔥 Tous les labels cliquables
+    const labels = document.querySelectorAll("svg text, svg rect.label-box");
 
     labels.forEach(label => {
         label.style.cursor = "pointer";
         label.style.userSelect = "none";
 
-        // essaie de déduire le canton associé (par proximité ou texte)
-        const textContent = label.textContent.trim().toUpperCase();
-        const possibleCanton = Array.from(cantons).find(c => c.id === textContent);
+        // Récupération du canton depuis l'id du label
+        // label-text-VD  →  VD
+        const cantonId = label.id.replace("label-text-", "").replace("label-box-", "");
+        const cantonPath = document.getElementById("canton-" + cantonId);
 
+        if (!cantonPath) return;
+
+        // CLICK : identique au canton
         label.addEventListener("click", () => {
-            if (possibleCanton) {
-                possibleCanton.dispatchEvent(new Event("click"));
-            }
+            cantonPath.dispatchEvent(new Event("click"));
         });
 
-        // hover : met en évidence le canton correspondant
+        // HOVER : identique au canton
         label.addEventListener("mouseenter", () => {
-            if (possibleCanton) possibleCanton.style.fill = "#22c55e";
+            cantonPath.style.fill = "#22c55e";
         });
+
         label.addEventListener("mouseleave", () => {
-            if (possibleCanton) possibleCanton.style.fill = "white";
+            cantonPath.style.fill = "white";
         });
     });
 });
-</script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const openBtn = document.getElementById("openCategoriesBtn");

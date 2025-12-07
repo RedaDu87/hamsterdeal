@@ -346,7 +346,6 @@
 
     </div>
 </section>
-
 <!-- ===========================
    OFF-CANVAS : PANNEL LATÉRAL
 =========================== -->
@@ -599,7 +598,60 @@
     </div>
 </section>
 
+<script>document.addEventListener("DOMContentLoaded", () => {
+    const cantons = document.querySelectorAll("svg .canton");
 
+    cantons.forEach(c => {
+        const id = c.getAttribute("id").replace("canton-", ""); // ex: "VD"
+        c.style.fill = "white";
+        c.style.stroke = "green";
+        c.style.cursor = "pointer";
+
+        // clic = redirection vers la page annonces filtrée
+        c.addEventListener("click", () => {
+            const url = `/ads?q=&category=&canton=${id}`;
+            window.location.href = url;
+        });
+
+        // hover visuel
+        c.addEventListener("mouseenter", () => {
+            c.style.fill = "#22c55e"; // vert Tailwind
+        });
+        c.addEventListener("mouseleave", () => {
+            c.style.fill = "white";
+        });
+    });
+
+    // 🔥 Tous les labels cliquables
+    const labels = document.querySelectorAll("svg text, svg rect.label-box");
+
+    labels.forEach(label => {
+        label.style.cursor = "pointer";
+        label.style.userSelect = "none";
+
+        // Récupération du canton depuis l'id du label
+        // label-text-VD  →  VD
+        const cantonId = label.id.replace("label-text-", "").replace("label-box-", "");
+        const cantonPath = document.getElementById("canton-" + cantonId);
+
+        if (!cantonPath) return;
+
+        // CLICK : identique au canton
+        label.addEventListener("click", () => {
+            cantonPath.dispatchEvent(new Event("click"));
+        });
+
+        // HOVER : identique au canton
+        label.addEventListener("mouseenter", () => {
+            cantonPath.style.fill = "#22c55e";
+        });
+
+        label.addEventListener("mouseleave", () => {
+            cantonPath.style.fill = "white";
+        });
+    });
+});
+</script>
 <!-- ===========================
    SCRIPT PANEL CATÉGORIES
 =========================== -->

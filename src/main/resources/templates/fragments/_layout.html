@@ -63,12 +63,29 @@
 
     <!-- Desktop Nav -->
     <nav class="hidden md:flex items-center gap-4 text-sm font-medium">
-      <a th:href="@{/ads}" class="hover:text-primary transition">Parcourir</a>
-      <a th:href="@{/ad/new}" class="bg-gradient-to-r from-primary to-green-600 text-white px-3 py-1.5 rounded-md shadow hover:scale-105 transition">
+
+      <!-- Bouton PARCOURIR LES ANNONCES -->
+      <a th:href="@{/ads}"
+         class="bg-white border border-primary text-primary px-3 py-1.5 rounded-md shadow hover:bg-primary hover:text-white transition font-semibold">
+        Parcourir les annonces
+      </a>
+
+      <!-- Bouton Déposer une annonce -->
+      <!-- Déposer une annonce -->
+      <a th:if="${isAuthenticated}"
+         th:href="@{/ad/new}"
+         class="bg-gradient-to-r from-primary to-green-600 text-white px-3 py-1.5 rounded-md shadow hover:scale-105 transition">
         Déposer une annonce
       </a>
 
-      <!-- Connecté -->
+      <!-- Version non connectée : redirection vers /login -->
+      <a th:if="${!isAuthenticated}"
+         th:href="@{/login}"
+         class="bg-gradient-to-r from-primary to-green-600 text-white px-3 py-1.5 rounded-md shadow hover:scale-105 transition">
+        Déposer une annonce
+      </a>
+
+      <!-- Section utilisateur -->
       <div th:if="${isAuthenticated}" class="flex items-center gap-3">
 
         <span th:text="${user != null ? user.firstName + ' ' + user.lastName : 'Utilisateur'}"></span>
@@ -76,15 +93,17 @@
         <a th:href="@{/profile}" class="flex items-center">
           <div class="w-8 h-8 rounded-full overflow-hidden bg-primary text-white flex items-center justify-center font-bold shadow">
             <img th:if="${user != null and user.photoUrl != null}" th:src="@{${user.photoUrl}}" class="w-full h-full object-cover" />
-            <span th:if="${user == null || user.photoUrl == null}" th:text="${user != null && user.firstName != null ? user.firstName.substring(0,1) : 'U'}"></span>
+            <span th:if="${user == null || user.photoUrl == null}" th:text="${user.firstName.substring(0,1)}"></span>
           </div>
         </a>
 
         <form th:action="@{/logout}" method="post">
-          <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-2.5 py-1 rounded-md shadow text-xs">
+          <button type="submit"
+                  class="bg-red-500 hover:bg-red-600 text-white px-2.5 py-1 rounded-md shadow text-xs">
             Déconnexion
           </button>
         </form>
+
       </div>
 
       <!-- Invité -->
@@ -92,7 +111,9 @@
         <a th:href="@{/login}" class="bg-primary hover:bg-green-700 text-white px-3 py-1.5 rounded-md shadow text-sm">Connexion</a>
         <a th:href="@{/register}" class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1.5 rounded-md shadow text-sm">Inscription</a>
       </div>
+
     </nav>
+
 
     <!-- Mobile button -->
     <button id="menu-btn" class="md:hidden p-1.5 rounded-md bg-gray-100 hover:bg-gray-200">
@@ -104,31 +125,74 @@
   </div>
 
   <!-- Mobile Nav -->
+  <!-- Mobile Nav -->
   <nav id="mobile-menu" class="hidden md:hidden bg-white border-t shadow-lg">
-    <div class="flex flex-col p-3 space-y-2 text-sm">
+    <div class="flex flex-col p-3 space-y-3 text-sm">
 
-      <a th:href="@{/ads}" class="hover:text-primary">Parcourir</a>
-      <a th:href="@{/ad/new}" class="bg-primary text-white px-3 py-1.5 rounded-md text-center shadow">Déposer une annonce</a>
+      <!-- 🔍 Bouton Parcourir les annonces (mis en valeur) -->
+      <a th:href="@{/ads}"
+         class="w-full text-center bg-white border border-primary text-primary
+              px-3 py-2 rounded-md shadow hover:bg-primary hover:text-white
+              transition font-semibold">
+        Parcourir les annonces
+      </a>
 
-      <div th:if="${isAuthenticated}" class="flex items-center gap-2 border-t pt-2">
-        <div class="w-8 h-8 rounded-full overflow-hidden bg-primary text-white flex items-center justify-center font-bold">
-          <img th:if="${user != null and user.photoUrl != null}" th:src="@{${user.photoUrl}}" class="w-full h-full object-cover" />
-          <span th:if="${user == null || user.photoUrl == null}" th:text="${user != null && user.firstName != null ? user.firstName.substring(0,1) : 'U'}"></span>
+      <!-- ➕ Bouton Déposer une annonce -->
+      <!-- Déposer une annonce -->
+      <a th:if="${isAuthenticated}"
+         th:href="@{/ad/new}"
+         class="bg-gradient-to-r from-primary to-green-600 text-white px-3 py-1.5 rounded-md shadow hover:scale-105 transition">
+        Déposer une annonce
+      </a>
+
+      <!-- Version non connectée : redirection vers /login -->
+      <a th:if="${!isAuthenticated}"
+         th:href="@{/login}"
+         class="bg-gradient-to-r from-primary to-green-600 text-white px-3 py-1.5 rounded-md shadow hover:scale-105 transition">
+        Déposer une annonce
+      </a>
+
+      <!-- 🌟 Utilisateur connecté -->
+      <div th:if="${isAuthenticated}" class="flex items-center gap-3 border-t pt-3">
+
+        <div class="w-10 h-10 rounded-full overflow-hidden bg-primary text-white
+                  flex items-center justify-center font-bold">
+          <img th:if="${user != null and user.photoUrl != null}"
+               th:src="@{${user.photoUrl}}"
+               class="w-full h-full object-cover" />
+          <span th:if="${user == null || user.photoUrl == null}"
+                th:text="${user.firstName.substring(0,1)}"></span>
         </div>
-        <span th:text="${user != null ? user.email : ''}" class="text-gray-600 text-sm"></span>
+
+        <div class="flex flex-col">
+        <span th:text="${user != null ? user.firstName + ' ' + user.lastName : ''}"
+              class="font-semibold"></span>
+          <span th:text="${user.email}" class="text-gray-500 text-xs"></span>
+        </div>
 
         <form th:action="@{/logout}" method="post" class="ml-auto">
-          <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-md text-xs">Déconnexion</button>
+          <button type="submit"
+                  class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md shadow text-xs">
+            Déconnexion
+          </button>
         </form>
       </div>
 
-      <div th:if="${!isAuthenticated}" class="flex gap-2 pt-2 border-t">
-        <a th:href="@{/login}" class="bg-primary text-white px-3 py-1.5 rounded-md flex-1 text-center text-sm">Connexion</a>
-        <a th:href="@{/register}" class="bg-gray-600 text-white px-3 py-1.5 rounded-md flex-1 text-center text-sm">Inscription</a>
+      <!-- 👤 Utilisateur non connecté -->
+      <div th:if="${!isAuthenticated}" class="flex gap-2 pt-3 border-t">
+        <a th:href="@{/login}"
+           class="bg-primary text-white px-3 py-2 rounded-md flex-1 text-center shadow text-sm">
+          Connexion
+        </a>
+        <a th:href="@{/register}"
+           class="bg-gray-600 text-white px-3 py-2 rounded-md flex-1 text-center shadow text-sm">
+          Inscription
+        </a>
       </div>
 
     </div>
   </nav>
+
 </header>
 
 <main class="container mx-auto px-4 py-8 flex-grow" th:insert="${content}"></main>

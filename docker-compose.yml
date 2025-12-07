@@ -37,7 +37,7 @@ services:
         condition: any
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.hamsterdeal.rule=Host(`${HOST}`)"
+        - "traefik.http.routers.hamsterdeal.rule=Host(`hamsterdeal.ch`)"
         - "traefik.http.routers.hamsterdeal.entrypoints=websecure"
         - "traefik.http.services.hamsterdeal.loadbalancer.server.port=8080"
 

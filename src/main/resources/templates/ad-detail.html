@@ -24,13 +24,15 @@
         <!-- image principale -->
         <div th:if="${ad.images != null and #lists.size(ad.images) > 0}"
              class="relative overflow-hidden rounded-xl shadow-lg mb-4">
+
             <img th:src="${ad.images[0].url}"
                  th:alt="${ad.images[0].alt}"
-                 class="w-full h-[480px] object-cover cursor-pointer transition-transform duration-500 hover:scale-105"
+                 class="w-full h-[240px] md:h-[300px] lg:h-[380px] object-cover cursor-pointer transition-transform duration-500 hover:scale-105"
                  onclick="openLightbox(0)">
         </div>
 
-        <!-- miniatures (5 max) -->
+
+        <!-- miniatures (20 max) -->
         <div class="flex flex-wrap gap-2">
             <!-- on boucle sur TOUTES les images mais on n'affiche que les index 1..5 -->
             <div th:each="img,iter : ${ad.images}"
@@ -154,21 +156,41 @@
         if (e.key === 'ArrowLeft') prevImage();
     });
 
-function goBack() {
-        if (document.referrer && document.referrer !== window.location.href) {
+    function goBack() {
+        if (document.referrer && !document.referrer.includes(window.location.pathname)) {
             window.history.back();
         } else {
-            window.location.href = '/ads'; // fallback vers la liste
+            window.location.href = '/ads'; // fallback propre
         }
     }
+
 
     // 🔍 Affiche le bouton seulement si on vient d'une recherche
     document.addEventListener('DOMContentLoaded', () => {
         const ref = document.referrer;
-        if (ref && (ref.includes('/ads') || ref.includes('/search'))) {
+
+        // Vérifie si l'utilisateur vient de :
+        // - /ads
+        // - /search
+        // - /
+        // - /index ou /index.html
+        const fromAdsOrIndex =
+            ref &&
+            ref !== window.location.href &&
+            (
+                ref.includes('/ads') ||
+                ref.includes('/search') ||
+                ref.match(/ads\?/) ||
+                ref.endsWith('/') ||                      // page d'accueil
+                ref.includes('/index') ||                 // /index ou /index.html
+                ref.includes('/index.html')               // fallback explicite
+            );
+
+        if (fromAdsOrIndex) {
             document.getElementById('backButtonContainer').classList.remove('hidden');
         }
     });
+
 </script>
 
 </body>

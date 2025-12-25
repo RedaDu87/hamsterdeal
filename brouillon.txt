@@ -1,0 +1,227 @@
+
+
+    <section class="">
+      <div class="max-w-6xl mx-auto px-4">
+        <h2 class="text-2xl font-bold mb-6">Catégories</h2>
+
+        <!-- Catégories visibles (3) -->
+        <div class="flex flex-wrap items-center gap-6">
+          <!-- 3 catégories visibles -->
+          <a th:href="@{/ads(category='car')}" class="flex flex-col items-center gap-2 group">
+            <svg viewBox="0 0 24 24"
+                 class="w-10 h-10 p-2 rounded-full bg-white shadow group-hover:shadow-md transition text-green-600">
+              <path d="M3 13h18l-1.2-3.6a3 3 0 0 0-2.84-2.04H7.04A3 3 0 0 0 4.2 9.4L3 13Z" fill="currentColor" />
+            </svg>
+            <span class="text-sm font-medium">Voitures</span>
+          </a>
+
+          <a th:href="@{/ads(category='electronics')}" class="flex flex-col items-center gap-2 group">
+            <svg viewBox="0 0 24 24"
+                 class="w-10 h-10 p-2 rounded-full bg-white shadow group-hover:shadow-md transition text-green-600">
+              <rect x="7" y="7" width="10" height="10" rx="2" fill="currentColor"/>
+              <path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            </svg>
+            <span class="text-sm font-medium">Électronique</span>
+          </a>
+
+          <a th:href="@{/ads(category='home')}" class="flex flex-col items-center gap-2 group">
+            <svg viewBox="0 0 24 24"
+                 class="w-10 h-10 p-2 rounded-full bg-white shadow group-hover:shadow-md transition text-green-600">
+              <path d="M3 11l9-7 9 7v8a2 2 0 0 1-2 2h-4v-6H9v6H5a2 2 0 0 1-2-2v-8z" fill="currentColor"/>
+            </svg>
+            <span class="text-sm font-medium">Maison</span>
+          </a>
+
+          <!-- Trois petits points -->
+          <span class="text-2xl text-gray-400 select-none">...</span>
+
+          <!-- Bouton pour ouvrir toutes les catégories -->
+          <button id="openCategoriesBtn"
+                  class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow text-sm font-medium">
+            Voir toutes les catégories
+          </button>
+        </div>
+      </div>
+
+      <!-- Panneau latéral (off-canvas) -->
+    <div id="categoriesPanel"
+         class="fixed top-0 right-0 h-full w-72 bg-white shadow-2xl transform translate-x-[100%] transition-transform duration-300 z-50 overflow-y-auto">
+
+        <!-- En-tête -->
+        <div class="flex justify-between items-center p-4 border-b">
+          <h3 class="text-lg font-semibold">Toutes les catégories</h3>
+          <button id="closeCategoriesBtn" class="text-gray-500 hover:text-red-500 text-2xl">&times;</button>
+        </div>
+
+        <!-- Liste complète de catégories -->
+                <!-- Voitures -->
+                <a th:href="@{/ads(category='car')}" class="flex flex-col items-center gap-2 group">
+                    <svg viewBox="0 0 24 24" class="w-8 h-8 p-1.5 rounded-full bg-white shadow group-hover:shadow-md transition">
+                        <path d="M3 13h18l-1.2-3.6a3 3 0 0 0-2.84-2.04H7.04A3 3 0 0 0 4.2 9.4L3 13Z" fill="currentColor" />
+                        <circle cx="7" cy="17" r="2" />
+                        <circle cx="17" cy="17" r="2" />
+                    </svg>
+                    <span class="text-xs font-medium">Voitures</span>
+                </a>
+
+                <!-- Électronique -->
+                <a th:href="@{/ads(category='electronics')}" class="flex flex-col items-center gap-2 group">
+                    <svg viewBox="0 0 24 24" class="w-8 h-8 p-1.5 rounded-full bg-white shadow group-hover:shadow-md transition">
+                        <rect x="7" y="7" width="10" height="10" rx="2" fill="currentColor"/>
+                        <path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    </svg>
+                    <span class="text-sm font-medium">Électronique</span>
+                </a>
+
+                <!-- Maison -->
+                <a th:href="@{/ads(category='home')}" class="flex flex-col items-center gap-2 group">
+                    <svg viewBox="0 0 24 24" class="w-8 h-8 p-1.5 rounded-full bg-white shadow group-hover:shadow-md transition">
+                        <path d="M3 11l9-7 9 7v8a2 2 0 0 1-2 2h-4v-6H9v6H5a2 2 0 0 1-2-2v-8z" fill="currentColor"/>
+                    </svg>
+                    <span class="text-sm font-medium">Maison</span>
+                </a>
+
+                <!-- Mode -->
+                <a th:href="@{/ads(category='fashion')}" class="flex flex-col items-center gap-2 group">
+                    <svg viewBox="0 0 24 24" class="w-8 h-8 p-1.5 rounded-full bg-white shadow group-hover:shadow-md transition">
+                        <path d="M8 6l4-2 4 2 2 6-6 8-6-8 2-6z" fill="currentColor"/>
+                    </svg>
+                    <span class="text-sm font-medium">Mode</span>
+                </a>
+
+                <!-- Sport -->
+                <a th:href="@{/ads(category='sports')}" class="flex flex-col items-center gap-2 group">
+                    <svg viewBox="0 0 24 24" class="w-8 h-8 p-1.5 rounded-full bg-white shadow group-hover:shadow-md transition">
+                        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                        <path d="M3 12h18M12 3v18M5 5l14 14" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                    <span class="text-sm font-medium">Sport</span>
+                </a>
+
+                <!-- Jouets -->
+                <a th:href="@{/ads(category='toys')}" class="flex flex-col items-center gap-2 group">
+                    <svg viewBox="0 0 24 24" class="w-8 h-8 p-1.5 rounded-full bg-white shadow group-hover:shadow-md transition">
+                        <circle cx="8" cy="9" r="3" fill="currentColor"/>
+                        <circle cx="16" cy="9" r="3" fill="currentColor"/>
+                        <rect x="6" y="12" width="12" height="7" rx="2" fill="currentColor"/>
+                    </svg>
+                    <span class="text-sm font-medium">Jouets</span>
+                </a>
+
+                <!-- Livres -->
+                <a th:href="@{/ads(category='books')}" class="flex flex-col items-center gap-2 group">
+                    <svg viewBox="0 0 24 24" class="w-8 h-8 p-1.5 rounded-full bg-white shadow group-hover:shadow-md transition">
+                        <path d="M5 4h8a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3V4z" fill="currentColor"/>
+                        <path d="M9 4h8a3 3 0 0 1 3 3v13h-8" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    </svg>
+                    <span class="text-sm font-medium">Livres</span>
+                </a>
+
+                <!-- Musique -->
+                <a th:href="@{/ads(category='music')}" class="flex flex-col items-center gap-2 group">
+                    <svg viewBox="0 0 24 24" class="w-8 h-8 p-1.5 rounded-full bg-white shadow group-hover:shadow-md transition">
+                        <path d="M14 3v10.5a3.5 3.5 0 1 1-1.5-2.9V6l7-2v7.5a3.5 3.5 0 1 1-1.5-2.9V3l-4 1z" fill="currentColor"/>
+                    </svg>
+                    <span class="text-sm font-medium">Musique</span>
+                </a>
+
+                <!-- Jeux vidéo -->
+                <a th:href="@{/ads(category='gaming')}" class="flex flex-col items-center gap-2 group">
+                    <svg viewBox="0 0 24 24" class="w-8 h-8 p-1.5 rounded-full bg-white shadow group-hover:shadow-md transition">
+                        <rect x="3" y="9" width="18" height="8" rx="4" fill="currentColor"/>
+                        <circle cx="16.5" cy="13" r="1.25" fill="#fff"/>
+                        <circle cx="18.5" cy="11" r="1.25" fill="#fff"/>
+                        <circle cx="18.5" cy="15" r="1.25" fill="#fff"/>
+                        <circle cx="14.5" cy="13" r="1.25" fill="#fff"/>
+                    </svg>
+                    <span class="text-sm font-medium">Jeux vidéo</span>
+                </a>
+
+                <!-- Outils -->
+                <a th:href="@{/ads(category='tools')}" class="flex flex-col items-center gap-2 group">
+                    <svg viewBox="0 0 24 24" class="w-8 h-8 p-1.5 rounded-full bg-white shadow group-hover:shadow-md transition">
+                        <path d="M14 3l7 7-4 4-7-7-3 3-4-4 3-3 4 4z" fill="currentColor"/>
+                    </svg>
+                    <span class="text-sm font-medium">Bricolage / Outils</span>
+                </a>
+
+                <!-- Jardin -->
+                <a th:href="@{/ads(category='garden')}" class="flex flex-col items-center gap-2 group">
+                    <svg viewBox="0 0 24 24" class="w-8 h-8 p-1.5 rounded-full bg-white shadow group-hover:shadow-md transition">
+                        <path d="M12 2a7 7 0 0 0 0 14 7 7 0 0 0 0-14zm0 14v6" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    </svg>
+                    <span class="text-sm font-medium">Jardin</span>
+                </a>
+
+                <!-- Animaux -->
+                <a th:href="@{/ads(category='pets')}" class="flex flex-col items-center gap-2 group">
+                    <svg viewBox="0 0 24 24" class="w-8 h-8 p-1.5 rounded-full bg-white shadow group-hover:shadow-md transition">
+                        <circle cx="6" cy="8" r="2" fill="currentColor"/>
+                        <circle cx="18" cy="8" r="2" fill="currentColor"/>
+                        <path d="M12 14a6 6 0 0 0-6 6h12a6 6 0 0 0-6-6z" fill="currentColor"/>
+                    </svg>
+                    <span class="text-sm font-medium">Animaux</span>
+                </a>
+
+                <!-- Meubles -->
+                <a th:href="@{/ads(category='furniture')}" class="flex flex-col items-center gap-2 group">
+                    <svg viewBox="0 0 24 24" class="w-8 h-8 p-1.5 rounded-full bg-white shadow group-hover:shadow-md transition">
+                        <rect x="4" y="8" width="16" height="8" fill="currentColor"/>
+                        <path d="M4 8V6h16v2M4 16v2m16-2v2" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                    <span class="text-sm font-medium">Meubles</span>
+                </a>
+
+                <!-- Art -->
+                <a th:href="@{/ads(category='art')}" class="flex flex-col items-center gap-2 group">
+                    <svg viewBox="0 0 24 24" class="w-8 h-8 p-1.5 rounded-full bg-white shadow group-hover:shadow-md transition">
+                        <path d="M4 20h16v-2H4v2zm2-4h12l-6-12-6 12z" fill="currentColor"/>
+                    </svg>
+                    <span class="text-sm font-medium">Art</span>
+                </a>
+
+                <!-- Collections -->
+                <a th:href="@{/ads(category='collectibles')}" class="flex flex-col items-center gap-2 group">
+                    <svg viewBox="0 0 24 24" class="w-8 h-8 p-1.5 rounded-full bg-white shadow group-hover:shadow-md transition">
+                        <circle cx="8" cy="12" r="3" fill="currentColor"/>
+                        <circle cx="16" cy="12" r="3" fill="currentColor"/>
+                        <rect x="8" y="9" width="8" height="6" fill="currentColor"/>
+                    </svg>
+                    <span class="text-sm font-medium">Collections</span>
+                </a>
+
+                <!-- Immobilier -->
+                <a th:href="@{/ads(category='realestate')}" class="flex flex-col items-center gap-2 group">
+                    <svg viewBox="0 0 24 24" class="w-8 h-8 p-1.5 rounded-full bg-white shadow group-hover:shadow-md transition">
+                        <path d="M3 10l9-7 9 7v10a2 2 0 0 1-2 2h-4v-6H9v6H5a2 2 0 0 1-2-2V10z" fill="currentColor"/>
+                    </svg>
+                    <span class="text-sm font-medium">Immobilier</span>
+                </a>
+
+                <!-- Services -->
+                <a th:href="@{/ads(category='services')}" class="flex flex-col items-center gap-2 group">
+                    <svg viewBox="0 0 24 24" class="w-8 h-8 p-1.5 rounded-full bg-white shadow group-hover:shadow-md transition">
+                        <circle cx="12" cy="12" r="9" fill="currentColor"/>
+                        <path d="M12 6v6l4 2" stroke="#fff" stroke-width="1.5" fill="none"/>
+                    </svg>
+                    <span class="text-sm font-medium">Services</span>
+                </a>
+
+                <!-- Autre -->
+                <a th:href="@{/ads(category='other')}" class="flex flex-col items-center gap-2 group">
+                    <svg viewBox="0 0 24 24" class="w-8 h-8 p-1.5 rounded-full bg-white shadow group-hover:shadow-md transition">
+                        <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z" fill="currentColor"/>
+                        <path d="M12 8v4" stroke="#fff" stroke-width="1.5"/>
+                        <circle cx="12" cy="16" r="1" fill="#fff"/>
+                    </svg>
+                    <span class="text-sm font-medium">Autre</span>
+                </a>
+
+            </div>
+
+    </section>
+
+
+        <section style="width: 50%">
+        --img svg
+    </section>

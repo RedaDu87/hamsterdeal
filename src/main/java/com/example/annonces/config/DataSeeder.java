@@ -64,7 +64,7 @@ public class DataSeeder {
 
             for (String category : categories) {
 
-                for (int i = 1; i <= 20; i++) {   // 👉 génère 20 annonces par catégorie
+                for (int i = 1; i <= 20000; i++) {   // 👉 génère 20 annonces par catégorie
 
                     Ad ad = new Ad();
                     ad.setTitle(category + " annonce " + i);

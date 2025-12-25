@@ -12,6 +12,7 @@ import java.util.Map;
 
 @Service
 public class JwtService {
+
     private final Key key;
     private final String issuer;
     private final long expirationSeconds;
@@ -24,7 +25,7 @@ public class JwtService {
         this.expirationSeconds = expirationSeconds;
     }
 
-    public String generate(String subject, Map<String, Object> claims){
+    public String generate(String subject, Map<String, Object> claims) {
         Instant now = Instant.now();
         return Jwts.builder()
                 .setIssuer(issuer)
@@ -36,21 +37,30 @@ public class JwtService {
                 .compact();
     }
 
-    public Jws<Claims> parse(String token){
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+    public Jws<Claims> parse(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token);
     }
 
+    // ✅ EXISTANT (on garde)
     public boolean isTokenValid(String token) {
         try {
-            Jws<Claims> claimsJws = parse(token);
-            return true; // Pas d’exception = valide
-        } catch (ExpiredJwtException e) {
-            System.out.println("Token expiré à : " + e.getClaims().getExpiration());
-            return false;
+            parse(token);
+            return true;
         } catch (JwtException e) {
-            System.out.println("Token invalide : " + e.getMessage());
             return false;
         }
     }
 
+    // ✅ AJOUTÉ : alias propre
+    public boolean isValid(String token) {
+        return isTokenValid(token);
+    }
+
+    // ✅ AJOUTÉ : lecture du subject (email)
+    public String getSubject(String token) {
+        return parse(token).getBody().getSubject();
+    }
 }

@@ -37,7 +37,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/geo/**").permitAll()
                         .requestMatchers("/", "/ads/**", "/ad/**", "/login", "/register",
                                 "/css/**", "/js/**", "/uploads/**", "/profiles/**",
-                                "/favicon.ico", "/api/auth/**")
+                                "/favicon.ico", "/api/auth/**","/api/ads")
                         .permitAll()
                         .requestMatchers(
                                 "/ad/new", "/ad/save", "/ad/edit/**", "/ad/update/**",
@@ -59,7 +59,9 @@ public class SecurityConfig {
         config.setAllowedOrigins(List.of(
                 "https://hamsterdeal.ch",
                 "https://www.hamsterdeal.ch",
-                "http://localhost:8080"
+                "http://localhost:8080",
+                "http://localhost:4200",
+                "**"
         ));
 
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));

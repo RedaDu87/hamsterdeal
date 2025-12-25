@@ -16,7 +16,7 @@ spring:
 app:
   jwt:
     issuer: annonces-app
-    secret: "change-me-please-very-long-secret-key"
+    secret: "change-me-please-very-long-secrzet-key"
     expiration: 86400  # 1 jour en secondes
   upload:
     #dir: ${user.home}/annonces-uploads

@@ -559,3 +559,16 @@ video {
   stroke:darkgreen !important;
   stroke-width:3px !important;
 }
+.uniform-select, .uniform-input {
+  @apply w-full p-3 border rounded-lg bg-white text-gray-700
+  focus:ring-2 focus:ring-green-400 focus:border-green-400
+  transition shadow-sm hover:border-gray-400;
+}
+
+.select-arrow {
+  @apply pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400;
+}
+
+.select-arrow svg {
+  @apply h-5 w-5;
+}

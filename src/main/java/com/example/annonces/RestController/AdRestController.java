@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -94,13 +95,16 @@ public class AdRestController {
     }
 
     // 🔹 Mise à jour annonce
-    @PutMapping(value = "/{id}", consumes = "multipart/form-data")
+    @PutMapping(
+            value = "/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Ad> update(
             @PathVariable String id,
-            @Valid @RequestPart("ad") AdRequest req,
-            @RequestPart(value = "files", required = false) List<MultipartFile> files,
-            Principal principal) throws IOException {
+            @Valid @RequestBody AdRequest req,
+            Principal principal) {
 
         Ad existing = adRepo.findById(id).orElseThrow();
 
@@ -112,13 +116,10 @@ public class AdRestController {
         updated.setId(existing.getId());
         updated.setImages(existing.getImages());
 
-        if (files != null) {
-            updated.getImages().addAll(handleFiles(files, req.getTitle()));
-        }
-
         adRepo.save(updated);
         return ResponseEntity.ok(updated);
     }
+
 
     // 🔹 Suppression image
     @DeleteMapping("/{adId}/images/{index}")

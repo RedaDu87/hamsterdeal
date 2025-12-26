@@ -37,12 +37,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/geo/**").permitAll()
                         .requestMatchers("/", "/ads/**", "/ad/**", "/login", "/register",
                                 "/css/**", "/js/**", "/uploads/**", "/profiles/**",
-                                "/favicon.ico", "/api/auth/**","/api/ads")
+                                "/favicon.ico", "/api/auth/**","/api/ads/**","/api/auth2/**","/api/profile/**")
                         .permitAll()
                         .requestMatchers(
                                 "/ad/new", "/ad/save", "/ad/edit/**", "/ad/update/**",
                                 "/ad/delete/**", "/ad/my", "/profile",
-                                "/api/ads/search")
+                                "/api/ads/search","/api/profile/**")
                         .authenticated()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

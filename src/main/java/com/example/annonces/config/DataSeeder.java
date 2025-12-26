@@ -32,7 +32,7 @@ public class DataSeeder {
             admin.setEmail("admin@example.com");
 
             // ⚠️ METTRE UN VRAI HASH BCRYPT !
-            admin.setPasswordHash("$2a$10$ZpP8hV9G23/JIUNkGUfUTO/nZDaAg8jh1IGnh07GXOXy7JYaeYhCK"); // pour tests uniquement
+            admin.setPasswordHash("$2a$10$ZpP8hV9G23/JIUNkGUfUTO/nZDaAg8jh1IGnh07GXOXy7JYaeYhCK"); // pour tests uniquement admin123
 
             admin.setRoles(Set.of(Role.ADMIN));
             admin.setCreatedAt(Instant.now());
@@ -64,7 +64,7 @@ public class DataSeeder {
 
             for (String category : categories) {
 
-                for (int i = 1; i <= 20000; i++) {   // 👉 génère 20 annonces par catégorie
+                for (int i = 1; i <= 20; i++) {   // 👉 génère 20 annonces par catégorie
 
                     Ad ad = new Ad();
                     ad.setTitle(category + " annonce " + i);

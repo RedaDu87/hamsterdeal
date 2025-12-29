@@ -105,50 +105,105 @@
     </div>
 
     <!-- LISTE DES ANNONCES -->
-    <div class="bg-white rounded-xl shadow-lg overflow-x-auto">
-        <table class="w-full border-collapse min-w-[600px]">
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <table class="w-full border-collapse text-sm">
             <thead class="bg-gray-50 text-gray-600 uppercase text-xs font-semibold">
             <tr>
                 <th class="p-3 text-left">Titre</th>
-                <th class="p-3 text-left">Catégorie</th>
                 <th class="p-3 text-right">Prix</th>
-                <th class="p-3 text-left">Publié</th>
+
+                <!-- Tablette + -->
+                <th class="p-3 text-left hidden sm:table-cell">Catégorie</th>
+
+                <!-- Desktop + -->
+                <th class="p-3 text-left hidden md:table-cell">Publié</th>
+
                 <th class="p-3 text-center">Actions</th>
             </tr>
             </thead>
+
             <tbody class="divide-y divide-gray-200">
             <tr th:each="ad : ${ads}" class="hover:bg-gray-50 transition">
-                <td class="p-3">
-                    <a th:href="@{/ad/{id}(id=${ad.id})}" class="font-medium text-blue-600 hover:underline"
-                       th:text="${ad.title}">Titre</a>
-                </td>
-                <td class="p-3" th:text="${ad.category}">Catégorie</td>
-                <td class="p-3 text-right font-semibold text-gray-800"
-                    th:text="|${#numbers.formatDecimal(ad.price,0,'NONE',2,'POINT')} CHF|">0 CHF</td>
-                <td class="p-3 text-gray-500"
-                    th:text="${#temporals.format(ad.createdAt, 'dd/MM/yyyy')}">01/01/2025</td>
-                <td class="p-3 text-center flex flex-col sm:flex-row sm:justify-center gap-2">
-                    <a th:href="@{/ad/edit/{id}(id=${ad.id})}"
-                       class="px-3 py-1 text-sm rounded-lg bg-yellow-100 text-yellow-700 hover:bg-yellow-200">
-                        Modifier
+
+                <!-- Titre -->
+                <td class="p-3 break-words">
+                    <a th:href="@{/ad/{id}(id=${ad.id})}"
+                       class="font-medium text-blue-600 hover:underline"
+                       th:text="${ad.title}">
                     </a>
-                    <form th:action="@{/ad/delete/{id}(id=${ad.id})}" method="post" class="inline">
-                        <button type="submit"
-                                class="px-3 py-1 text-sm rounded-lg bg-red-100 text-red-700 hover:bg-red-200"
-                                onclick="return confirm('Supprimer cette annonce ?')">
+                </td>
+
+                <!-- Prix -->
+                <td class="p-3 text-right font-semibold whitespace-nowrap">
+                    <span th:text="|${#numbers.formatDecimal(ad.price,0,'NONE',2,'POINT')} CHF|"></span>
+                </td>
+
+                <!-- Catégorie (tablette+) -->
+                <td class="p-3 hidden sm:table-cell"
+                    th:text="${ad.category}">
+                </td>
+
+                <!-- Date (desktop+) -->
+                <td class="p-3 text-gray-500 hidden md:table-cell"
+                    th:text="${#temporals.format(ad.createdAt, 'dd/MM/yyyy')}">
+                </td>
+
+                <!-- Actions -->
+                <td class="p-3 text-center">
+                    <div class="flex flex-col sm:flex-row justify-center gap-2">
+                        <a th:href="@{/ad/edit/{id}(id=${ad.id})}"
+                           class="px-3 py-1 text-xs rounded-lg bg-yellow-100 text-yellow-700 hover:bg-yellow-200">
+                            Modifier
+                        </a>
+
+                        <button type="button"
+                                class="px-3 py-1 text-xs rounded-lg bg-red-100 text-red-700 hover:bg-red-200"
+                                th:attr="data-ad-id=${ad.id}"
+                                onclick="deleteAd(this)">
                             Supprimer
                         </button>
-                    </form>
+                    </div>
                 </td>
             </tr>
+
             <tr th:if="${#lists.isEmpty(ads)}">
-                <td colspan="5" class="text-center py-6 text-gray-400">Aucune annonce trouvée</td>
+                <td colspan="5"
+                    class="text-center py-6 text-gray-400">
+                    Aucune annonce trouvée
+                </td>
             </tr>
             </tbody>
         </table>
     </div>
 
+
 </div>
+<script>
+    function deleteAd(button, adId) {
+
+        if (!confirm('Supprimer cette annonce ?')) return;
+
+        // ligne du tableau
+        const row = button.closest('tr');
+        const adId2 = button.dataset.adId;
+        fetch(`/ad/delete/${adId2}`, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(res => {
+                if (!res.ok) throw new Error();
+                // animation douce
+                row.style.transition = 'opacity 0.3s';
+                row.style.opacity = '0';
+                setTimeout(() => row.remove(), 300);
+            })
+            .catch(() => {
+                alert('Erreur lors de la suppression');
+            });
+    }
+</script>
 
 </body>
 </html>

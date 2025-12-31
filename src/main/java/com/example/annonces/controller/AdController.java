@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.nio.file.*;
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class AdController {
@@ -223,11 +224,22 @@ public class AdController {
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     public ResponseEntity<Void> delete(@PathVariable String id, Principal principal) {
-        Ad ad = adRepo.findById(id).orElseThrow();
+
+        Optional<Ad> opt = adRepo.findById(id);
+
+        if (opt.isEmpty()) {
+            // déjà supprimé → OK fonctionnellement
+            return ResponseEntity.noContent().build(); // 204
+        }
+
+        Ad ad = opt.get();
+
         if (!ad.getOwnerId().equals(principal.getName())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        adRepo.deleteById(id);
-        return ResponseEntity.noContent().build(); // 204
+
+        adRepo.delete(ad);
+        return ResponseEntity.noContent().build();
     }
+
 }

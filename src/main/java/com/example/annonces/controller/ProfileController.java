@@ -110,6 +110,53 @@ public class ProfileController {
         return "profile";
     }
 
+    @GetMapping("/api/profile/ads")
+    @ResponseBody
+    public PageResponse<Ad> profileAdsApi(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate
+    ) {
+
+        String email = SecurityUtils.getCurrentUserEmail();
+        User user = userRepo.findByEmail(email).orElseThrow();
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
+        Query query = new Query().with(pageable);
+        query.addCriteria(Criteria.where("ownerId").is(user.getEmail()));
+
+        if (title != null && !title.isBlank())
+            query.addCriteria(Criteria.where("title").regex(title, "i"));
+        if (category != null && !category.isBlank())
+            query.addCriteria(Criteria.where("category").regex(category, "i"));
+        if (minPrice != null)
+            query.addCriteria(Criteria.where("price").gte(minPrice));
+        if (maxPrice != null)
+            query.addCriteria(Criteria.where("price").lte(maxPrice));
+        if (fromDate != null || toDate != null) {
+            Criteria c = Criteria.where("createdAt");
+            if (fromDate != null)
+                c = c.gte(fromDate.atStartOfDay().toInstant(ZoneOffset.UTC));
+            if (toDate != null)
+                c = c.lte(toDate.plusDays(1).atStartOfDay().toInstant(ZoneOffset.UTC));
+            query.addCriteria(c);
+        }
+
+        List<Ad> results = mongoTemplate.find(query, Ad.class);
+        long total = mongoTemplate.count(Query.of(query).limit(-1).skip(-1), Ad.class);
+
+        return PageResponse.of(new PageImpl<>(results, pageable, total));
+    }
+
+
     @PostMapping("/profile")
     public String updateProfile(@ModelAttribute("user") User updated,
             @RequestParam("photoFile") MultipartFile photoFile,

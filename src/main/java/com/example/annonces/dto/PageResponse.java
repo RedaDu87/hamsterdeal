@@ -4,12 +4,14 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public class PageResponse<T> {
+
     private List<T> content;
-    private int page;
+    private int page;          // page courante (0-based)
     private int size;
     private long totalElements;
     private int totalPages;
-    public static <T> PageResponse<T> of(Page<T> p){
+
+    public static <T> PageResponse<T> of(Page<T> p) {
         var r = new PageResponse<T>();
         r.content = p.getContent();
         r.page = p.getNumber();
@@ -18,45 +20,41 @@ public class PageResponse<T> {
         r.totalPages = p.getTotalPages();
         return r;
     }
-    // getters
+
+    /* =====================
+       Getters Thymeleaf
+       ===================== */
 
     public List<T> getContent() {
         return content;
-    }
-
-    public void setContent(List<T> content) {
-        this.content = content;
     }
 
     public int getPage() {
         return page;
     }
 
-    public void setPage(int page) {
-        this.page = page;
+    /** Alias plus clair pour la vue */
+    public int getCurrentPage() {
+        return page;
     }
 
     public int getSize() {
         return size;
     }
 
-    public void setSize(int size) {
-        this.size = size;
-    }
-
     public long getTotalElements() {
         return totalElements;
-    }
-
-    public void setTotalElements(long totalElements) {
-        this.totalElements = totalElements;
     }
 
     public int getTotalPages() {
         return totalPages;
     }
 
-    public void setTotalPages(int totalPages) {
-        this.totalPages = totalPages;
+    public boolean isHasPrevious() {
+        return page > 0;
+    }
+
+    public boolean isHasNext() {
+        return page < totalPages - 1;
     }
 }

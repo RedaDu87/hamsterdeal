@@ -12,6 +12,10 @@ spring:
       database: ${SPRING_DATA_MONGODB_DATABASE:annonces}
   thymeleaf:
     cache: false
+  messages:
+    basename: i18n/messages
+    encoding: utf-8
+    fallback-to-system-locale: false
 
 app:
   jwt:

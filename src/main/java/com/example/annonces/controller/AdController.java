@@ -195,30 +195,30 @@ public class AdController {
 
     @PostMapping("/ad/{adId}/image/{imageIndex}/delete")
     @PreAuthorize("isAuthenticated()")
-    public String deleteImage(@PathVariable String adId,
+    @ResponseBody
+    public ResponseEntity<Void> deleteImage(
+            @PathVariable String adId,
             @PathVariable int imageIndex,
             Principal principal) {
+
         Ad ad = adRepo.findById(adId).orElseThrow();
+
         if (!ad.getOwnerId().equals(principal.getName())) {
-            throw new SecurityException("Non autorisé");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        if (ad.getImages() != null && imageIndex >= 0 && imageIndex < ad.getImages().size()) {
+
+        if (ad.getImages() != null
+                && imageIndex >= 0
+                && imageIndex < ad.getImages().size()) {
+
             ad.getImages().remove(imageIndex);
             adRepo.save(ad);
         }
-        return "redirect:/ad/edit/" + adId;
+
+        return ResponseEntity.noContent().build(); // ✅ 204
     }
 
-//    @PostMapping("/ad/delete/{id}")
-//    @PreAuthorize("isAuthenticated()")
-//    public String delete(@PathVariable String id, Principal principal) {
-//        Ad ad = adRepo.findById(id).orElseThrow();
-//        if (!ad.getOwnerId().equals(principal.getName())) {
-//            throw new SecurityException("Non autorisé");
-//        }
-//        adRepo.deleteById(id);
-//        return "redirect:/profile";
-//    }
+
 
     @PostMapping("/ad/delete/{id}")
     @PreAuthorize("isAuthenticated()")

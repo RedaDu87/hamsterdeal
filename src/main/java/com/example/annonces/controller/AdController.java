@@ -11,6 +11,8 @@ import com.example.annonces.service.AdService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -206,14 +208,26 @@ public class AdController {
         return "redirect:/ad/edit/" + adId;
     }
 
+//    @PostMapping("/ad/delete/{id}")
+//    @PreAuthorize("isAuthenticated()")
+//    public String delete(@PathVariable String id, Principal principal) {
+//        Ad ad = adRepo.findById(id).orElseThrow();
+//        if (!ad.getOwnerId().equals(principal.getName())) {
+//            throw new SecurityException("Non autorisé");
+//        }
+//        adRepo.deleteById(id);
+//        return "redirect:/profile";
+//    }
+
     @PostMapping("/ad/delete/{id}")
     @PreAuthorize("isAuthenticated()")
-    public String delete(@PathVariable String id, Principal principal) {
+    @ResponseBody
+    public ResponseEntity<Void> delete(@PathVariable String id, Principal principal) {
         Ad ad = adRepo.findById(id).orElseThrow();
         if (!ad.getOwnerId().equals(principal.getName())) {
-            throw new SecurityException("Non autorisé");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         adRepo.deleteById(id);
-        return "redirect:/profile";
+        return ResponseEntity.noContent().build(); // 204
     }
 }

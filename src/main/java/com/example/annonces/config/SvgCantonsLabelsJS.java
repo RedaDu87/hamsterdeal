@@ -228,7 +228,7 @@ public class SvgCantonsLabelsJS {
 
             // Sauvegarde
             try (OutputStreamWriter writer = new OutputStreamWriter(
-                    new FileOutputStream("Suisse_cantons_labels_js.svg"), "UTF-8")) {
+                    new FileOutputStream("Suisse_cantons_labels_js2.svg"), "UTF-8")) {
                 org.apache.batik.dom.util.DOMUtilities.writeDocument(doc, writer);
             }
 

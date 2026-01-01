@@ -3,23 +3,23 @@
       th:replace="~{fragments/_layout :: base(~{::body})}">
 <head>
     <meta charset="UTF-8">
-    <title>Connexion</title>
+    <title th:text="#{login.page.title}">Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gradient-to-br from-orange-100 via-yellow-50 to-pink-100">
 
 <main class="flex items-center justify-center min-h-[calc(100vh-8rem)] px-4">
     <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 relative">
+
         <!-- Hamster -->
         <div class="flex flex-col items-center mb-8">
             <div class="relative w-24 h-24">
-                <!-- Tête -->
                 <div class="absolute inset-0 bg-yellow-400 rounded-full shadow-lg"></div>
-                <!-- Oreilles -->
                 <div class="absolute -top-3 left-4 w-6 h-6 bg-yellow-400 rounded-full"></div>
                 <div class="absolute -top-3 right-4 w-6 h-6 bg-yellow-400 rounded-full"></div>
-                <!-- Yeux -->
+
                 <div class="absolute top-8 left-5 w-6 h-6 bg-white rounded-full flex items-center justify-center overflow-hidden">
                     <div id="eye-left" class="w-3 h-3 bg-black rounded-full transition-transform duration-75"></div>
                 </div>
@@ -27,35 +27,58 @@
                     <div id="eye-right" class="w-3 h-3 bg-black rounded-full transition-transform duration-75"></div>
                 </div>
             </div>
-            <h1 class="mt-4 text-xl font-bold text-gray-700">Bonjour, je suis Nibble 🐹</h1>
-            <p class="text-gray-500 text-sm">Connectez-vous pour continuer</p>
+
+            <h1 class="mt-4 text-xl font-bold text-gray-700"
+                th:text="#{login.title}">
+            </h1>
+
+            <p class="text-gray-500 text-sm"
+               th:text="#{login.subtitle}">
+            </p>
         </div>
 
         <!-- Formulaire -->
         <form id="loginForm" class="space-y-4">
             <label class="block">
-                <span class="font-medium text-gray-700">Email</span>
+                <span class="font-medium text-gray-700"
+                      th:text="#{login.email.label}">
+                </span>
                 <input type="email" name="email" required
                        class="w-full p-3 border rounded-lg mt-1 focus:ring-2 focus:ring-orange-500"/>
             </label>
+
             <label class="block">
-                <span class="font-medium text-gray-700">Mot de passe</span>
+                <span class="font-medium text-gray-700"
+                      th:text="#{login.password.label}">
+                </span>
                 <input id="passwordField" type="password" name="password" required
                        class="w-full p-3 border rounded-lg mt-1 focus:ring-2 focus:ring-orange-500"/>
             </label>
-            <button class="w-full py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-orange-500 to-red-500 shadow-lg hover:scale-[1.02] transform transition">
-                🚀 Se connecter
+
+            <button type="submit"
+                    class="w-full py-3 rounded-lg font-semibold text-white
+                           bg-gradient-to-r from-orange-500 to-red-500
+                           shadow-lg hover:scale-[1.02] transform transition"
+                    th:text="#{login.submit}">
             </button>
         </form>
+
         <!-- Lien inscription -->
         <p class="mt-6 text-center text-sm text-gray-600">
-            Vous n’avez pas encore de compte ?
-            <a th:href="@{/register}" class="text-orange-600 font-semibold hover:underline">
-                Inscrivez-vous
+            <span th:text="#{login.noAccount}"></span>
+            <a th:href="@{/register}"
+               class="text-orange-600 font-semibold hover:underline"
+               th:text="#{login.register}">
             </a>
         </p>
     </div>
 </main>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const loginErrorMsg = /*[[#{login.error}]]*/ 'Error';
+    /*]]>*/
+</script>
 
 <script>
     // Login
@@ -71,12 +94,16 @@
         if(res.ok) {
             window.location = '/';
         } else {
-            alert('Login invalide');
+            alert(loginErrorMsg);
         }
     });
 
     // Yeux
-    const eyes = [document.getElementById('eye-left'), document.getElementById('eye-right')];
+    const eyes = [
+        document.getElementById('eye-left'),
+        document.getElementById('eye-right')
+    ];
+
     document.addEventListener('mousemove', (e) => {
         const { innerWidth, innerHeight } = window;
         const x = (e.clientX / innerWidth - 0.5) * 20;
@@ -92,16 +119,15 @@
         eyes.forEach(eye => {
             eye.style.width = "80%";
             eye.style.height = "2px";
-            eye.style.backgroundColor = "black";
             eye.style.borderRadius = "2px";
             eye.style.transform = "translate(0, 8px)";
         });
     });
+
     pwdField.addEventListener('blur', () => {
         eyes.forEach(eye => {
             eye.style.width = "0.75rem";
             eye.style.height = "0.75rem";
-            eye.style.backgroundColor = "black";
             eye.style.borderRadius = "9999px";
             eye.style.transform = "translate(0, 0)";
         });

@@ -54,22 +54,44 @@
             </a>
 
             <!-- LANG SWITCH (public) -->
-            <div class="relative group">
-                <div class="flex items-center gap-1 cursor-pointer hover:text-primary">
+            <div class="relative">
+                <!-- TRIGGER -->
+                <button type="button"
+                        id="langToggle"
+                        class="flex items-center gap-1 hover:text-primary focus:outline-none"
+                        aria-haspopup="true"
+                        aria-expanded="false">
                     🌐 <span th:text="${#locale.language.toUpperCase()}">FR</span>
-                </div>
+                </button>
 
-                <div class="absolute right-0 mt-1
-              invisible opacity-0 group-hover:visible group-hover:opacity-100
-              transition-opacity duration-150
-              bg-white border rounded-lg shadow-lg z-50
-              pointer-events-auto">
-                    <a th:href="@{?(lang='fr')}" class="block px-4 py-2 hover:bg-gray-100">🇫🇷 Français</a>
-                    <a th:href="@{?(lang='de')}" class="block px-4 py-2 hover:bg-gray-100">🇩🇪 Deutsch</a>
-                    <a th:href="@{?(lang='it')}" class="block px-4 py-2 hover:bg-gray-100">🇮🇹 Italiano</a>
-                    <a th:href="@{?(lang='en')}" class="block px-4 py-2 hover:bg-gray-100">🇬🇧 English</a>
+                <!-- MENU -->
+                <div id="langMenu"
+                     class="absolute right-0 mt-1 hidden
+                bg-white border rounded-lg shadow-lg z-50">
+
+                    <a th:href="@{/(lang='fr')}"
+                       class="block px-4 py-2 hover:bg-gray-100"
+                       th:text="#{language.fr}">
+                    </a>
+
+                    <a th:href="@{/(lang='de')}"
+                       class="block px-4 py-2 hover:bg-gray-100"
+                       th:text="#{language.de}">
+                    </a>
+
+                    <a th:href="@{/(lang='it')}"
+                       class="block px-4 py-2 hover:bg-gray-100"
+                       th:text="#{language.it}">
+                    </a>
+
+                    <a th:href="@{/(lang='en')}"
+                       class="block px-4 py-2 hover:bg-gray-100"
+                       th:text="#{language.en}">
+                    </a>
                 </div>
             </div>
+
+
 
 
             <!-- AUTH CONNECTÉ -->
@@ -204,6 +226,26 @@
         .addEventListener('click', () =>
             document.getElementById('mobile-menu').classList.toggle('hidden')
         );
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const toggle = document.getElementById("langToggle");
+        const menu = document.getElementById("langMenu");
+
+        toggle.addEventListener("click", (e) => {
+            e.stopPropagation();
+            menu.classList.toggle("hidden");
+            toggle.setAttribute(
+                "aria-expanded",
+                menu.classList.contains("hidden") ? "false" : "true"
+            );
+        });
+
+        document.addEventListener("click", () => {
+            menu.classList.add("hidden");
+            toggle.setAttribute("aria-expanded", "false");
+        });
+    });
 </script>
 
 </body>

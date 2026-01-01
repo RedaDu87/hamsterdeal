@@ -1,429 +1,393 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      lang="fr"
-      th:replace="~{fragments/_layout :: base(~{::body})}">
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Runner Rush – Impossible Mode 🎮</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at top, #7dd3fc, #e0f2fe);
+            font-family: system-ui, sans-serif;
+        }
+
+        .game {
+            width: min(1200px, 96vw);
+            background: white;
+            border-radius: 26px;
+            overflow: hidden;
+            box-shadow: 0 40px 120px rgba(0, 0, 0, .4);
+        }
+
+        header {
+            background: linear-gradient(90deg, #020617, #1e293b);
+            color: white;
+            padding: 14px 22px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+        .hud {
+            display: flex;
+            gap: 14px;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, .15);
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-weight: 800;
+        }
+
+        canvas {
+            width: 100%;
+            display: block;
+        }
+
+        .overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, .95);
+            border-radius: 18px;
+            padding: 26px 30px;
+            text-align: center;
+            font-weight: 900;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, .35);
+        }
+
+        .hidden {
+            display: none
+        }
+    </style>
+</head>
+
 <body>
 
-<div class="max-w-5xl mx-auto">
-    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+<div class="game">
+    <header>
+        <h1>Runner Rush ☠️ Impossible</h1>
+        <div class="hud">
+            <div class="badge">Score <span id="score">0</span></div>
+            <div class="badge">Best <span id="best">0</span></div>
+        </div>
+    </header>
 
-        <div class="p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <div>
-                <h1 class="text-xl sm:text-2xl font-extrabold">Hamster Game 🐹</h1>
-                <p class="text-sm text-gray-500">
-                    Appuie sur <b>Entrée</b> ou <b>Espace</b> (mobile : tap) pour sauter. Évite les obstacles.
-                </p>
-            </div>
+    <div style="position:relative">
+        <canvas id="game"></canvas>
 
-            <div class="flex items-center gap-2">
-                <button id="btnStart"
-                        class="px-4 py-2 rounded-xl bg-gray-900 text-white font-semibold shadow hover:opacity-90 transition">
-                    Démarrer
-                </button>
-                <button id="btnRestart"
-                        class="px-4 py-2 rounded-xl bg-white border border-gray-300 text-gray-800 font-semibold shadow hover:bg-gray-50 transition">
-                    Rejouer
-                </button>
+        <div id="start" class="overlay">
+            <div class="card">
+                ESPACE / TAP → SAUT<br>
+                Bonne chance 😈
             </div>
         </div>
 
-        <div class="px-4 sm:px-6 pb-4 sm:pb-6">
-            <div class="flex flex-wrap items-center justify-between gap-3">
-                <div class="flex items-center gap-3 text-sm">
-          <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 text-gray-700">
-            Score : <b id="score">0</b>
-          </span>
-                    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 text-gray-700">
-            Best : <b id="best">0</b>
-          </span>
-                </div>
-
-                <div class="text-xs text-gray-500">
-                    Astuce : sur mobile, tape sur le jeu pour sauter.
-                </div>
+        <div id="gameover" class="overlay hidden">
+            <div class="card" style="color:#dc2626">
+                GAME OVER<br><br>
+                Clique pour recommencer
             </div>
         </div>
-
-        <div class="bg-gradient-to-b from-sky-50 to-white border-t">
-            <div class="relative">
-                <canvas id="game" class="w-full block"></canvas>
-
-                <!-- HUD -->
-                <div id="hint"
-                     class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div class="bg-white/80 backdrop-blur px-4 py-3 rounded-2xl shadow border text-center">
-                        <div class="font-extrabold">Prêt ?</div>
-                        <div class="text-sm text-gray-600">Entrée / Espace / Tap pour commencer</div>
-                    </div>
-                </div>
-
-                <div id="gameover"
-                     class="hidden absolute inset-0 flex items-center justify-center">
-                    <div class="bg-white/90 backdrop-blur px-5 py-4 rounded-2xl shadow border text-center">
-                        <div class="text-xl font-extrabold text-red-600">Game Over</div>
-                        <div class="text-sm text-gray-600 mt-1">Clique sur “Rejouer” ou appuie sur Entrée</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="mt-6 text-sm text-gray-500">
-        <a th:href="@{/}" class="text-primary font-semibold hover:underline">← Retour accueil</a>
     </div>
 </div>
 
 <script>
-    (function () {
+    (() => {
+
+        /* ===========================
+           AUDIO SYSTEM
+        =========================== */
+        let audioCtx = null;
+        let musicTimer = null;
+        let musicStep = 0;
+        let currentTheme = 0;
+
+        const THEMES = [
+            [523, 659, 784, 880, 784, 659],
+            [659, 784, 880, 988, 880, 784],
+            [523, 587, 659, 784, 659, 587],
+            [784, 880, 988, 880, 784, 659]
+        ];
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playTone(freq, dur = 0.12, vol = 0.08, type = "square", delay = 0) {
+            if (!audioCtx) return;
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.type = type;
+            o.frequency.value = freq;
+            g.gain.value = vol;
+            o.connect(g).connect(audioCtx.destination);
+            o.start(audioCtx.currentTime + delay);
+            o.stop(audioCtx.currentTime + delay + dur);
+        }
+
+        function startMusic() {
+            stopMusic();
+            initAudio();
+            musicStep = 0;
+            currentTheme = Math.floor(Math.random() * THEMES.length);
+
+            musicTimer = setInterval(() => {
+                const theme = THEMES[currentTheme];
+                playTone(theme[musicStep % theme.length], 0.12, 0.06, "square");
+                playTone(theme[musicStep % theme.length] / 2, 0.18, 0.04, "triangle");
+                musicStep++;
+
+                if (musicStep % 32 === 0) {
+                    currentTheme = Math.floor(Math.random() * THEMES.length);
+                }
+            }, 140);
+        }
+
+        function stopMusic() {
+            if (musicTimer) {
+                clearInterval(musicTimer);
+                musicTimer = null;
+            }
+        }
+
+        function jumpSound() {
+            initAudio();
+            playTone(880, 0.08, 0.1, "square");
+        }
+
+        function gameOverSound() {
+            initAudio();
+            [392, 330, 262].forEach((f, i) => playTone(f, 0.3, 0.12, "sawtooth", i * 0.15));
+        }
+
+        /* ===========================
+           CANVAS
+        =========================== */
         const canvas = document.getElementById("game");
         const ctx = canvas.getContext("2d");
 
-        const elScore = document.getElementById("score");
-        const elBest = document.getElementById("best");
-        const hint = document.getElementById("hint");
+        function resize() {
+            const w = canvas.parentElement.clientWidth;
+            const h = Math.max(480, w * 0.45);
+            const dpr = Math.min(2, devicePixelRatio || 1);
+            canvas.width = w * dpr;
+            canvas.height = h * dpr;
+            canvas.style.width = w + "px";
+            canvas.style.height = h + "px";
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        window.addEventListener("resize", resize);
+        resize();
+
+        /* ===========================
+           UI / STATE
+        =========================== */
+        const scoreEl = document.getElementById("score");
+        const bestEl = document.getElementById("best");
+        const startEl = document.getElementById("start");
         const gameoverEl = document.getElementById("gameover");
-        const btnStart = document.getElementById("btnStart");
-        const btnRestart = document.getElementById("btnRestart");
 
-        // --- responsive canvas (hiDPI)
-        function resizeCanvas() {
-            const parent = canvas.parentElement;
-            const cssW = parent.clientWidth;
-            const cssH = Math.max(260, Math.min(420, Math.round(cssW * 0.42)));
-            const dpr = Math.min(2, window.devicePixelRatio || 1);
+        let best = Number(localStorage.getItem("runner_best") || 0);
+        bestEl.textContent = best;
 
-            canvas.style.height = cssH + "px";
-            canvas.style.width = cssW + "px";
-            canvas.width = Math.round(cssW * dpr);
-            canvas.height = Math.round(cssH * dpr);
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // draw in CSS pixels
-        }
+        let running = false, dead = false;
+        let time = 0, score = 0;
+        let speed = 8;
+        const groundY = () => canvas.clientHeight - 70;
 
-        window.addEventListener("resize", resizeCanvas);
-        resizeCanvas();
-
-        // --- game state
-        const GROUND_PAD = 34;
-        const gravity = 0.85;
-        const jumpVel = -14.5;
-
-        let running = false;
-        let dead = false;
-        let startedOnce = false;
-
-        let t = 0;
-        let speed = 6;
-
-        let score = 0;
-        let best = Number(localStorage.getItem("hamster_best") || "0");
-        elBest.textContent = best;
-
-        const hamster = {
-            x: 90,
-            y: 0,
-            vy: 0,
-            w: 40,
-            h: 34,
-            onGround: true
-        };
-
-        function groundY() {
-            return canvas.clientHeight - GROUND_PAD;
-        }
-
-        const obstacles = [];
-        const coins = [];
-
-        function reset() {
-            t = 0;
-            speed = 6;
-            score = 0;
-            elScore.textContent = "0";
-
-            hamster.y = groundY() - hamster.h;
-            hamster.vy = 0;
-            hamster.onGround = true;
-
-            obstacles.length = 0;
-            coins.length = 0;
-
-            dead = false;
-            running = false;
-
-            gameoverEl.classList.add("hidden");
-            hint.classList.remove("hidden");
-        }
-
-        reset();
-
-        // --- input (Enter / Space / ArrowUp / click / tap)
-        function doJumpOrStart() {
-            if (dead) {
-                start();
-                return;
-            }
-            if (!running) start();
-
-            if (hamster.onGround) {
-                hamster.vy = jumpVel;
-                hamster.onGround = false;
-            }
-        }
-
-        function onKeyDown(e) {
-            // IMPORTANT: Enter = "Enter" (pas "13" en moderne)
-            if (e.code === "Space" || e.code === "Enter" || e.code === "ArrowUp") {
-                e.preventDefault();
-                doJumpOrStart();
-            }
-            if (e.code === "KeyR") {
-                e.preventDefault();
-                start(true);
-            }
-        }
-
-        document.addEventListener("keydown", onKeyDown);
-
-        canvas.addEventListener("pointerdown", (e) => {
-            e.preventDefault();
-            doJumpOrStart();
-        }, { passive: false });
-
-        btnStart.addEventListener("click", () => start());
-        btnRestart.addEventListener("click", () => start(true));
-
-        // --- spawn helpers
-        function spawnObstacle() {
-            const h = 26 + Math.round(Math.random() * 18);
-            const w = 18 + Math.round(Math.random() * 14);
-            obstacles.push({
-                x: canvas.clientWidth + 20,
-                y: groundY() - h,
-                w, h
-            });
-        }
-
-        function spawnCoin() {
-            coins.push({
-                x: canvas.clientWidth + 20,
-                y: groundY() - 110 - Math.random() * 60,
-                r: 10,
-                taken: false
-            });
-        }
-
-        function aabb(a, b) {
-            return (
-                a.x < b.x + b.w &&
-                a.x + a.w > b.x &&
-                a.y < b.y + b.h &&
-                a.y + a.h > b.y
-            );
-        }
-
-        function circleRectHit(c, r) {
-            // closest point on rect
-            const cx = Math.max(r.x, Math.min(c.x, r.x + r.w));
-            const cy = Math.max(r.y, Math.min(c.y, r.y + r.h));
-            const dx = c.x - cx;
-            const dy = c.y - cy;
-            return (dx * dx + dy * dy) <= (c.r * c.r);
-        }
-
-        // --- drawing
-        function clear() {
-            ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
-        }
-
+        /* ===========================
+           BACKGROUND (FAST PARALLAX)
+        =========================== */
         function drawBackground() {
-            // ground
-            ctx.fillStyle = "rgba(0,0,0,0.06)";
-            ctx.fillRect(0, groundY(), canvas.clientWidth, 2);
+            ctx.fillStyle = "#7dd3fc";
+            ctx.fillRect(0, 0, canvas.clientWidth, canvas.clientHeight);
 
-            // parallax hills
-            ctx.fillStyle = "rgba(119,202,34,0.18)";
-            for (let i = 0; i < 6; i++) {
-                const x = (i * 220 - (t * 0.6) % 220);
+            ctx.fillStyle = "#38bdf8";
+            for (let i = 0; i < 8; i++) {
+                const x = i * 240 - (time * 1.2) % 240;
                 ctx.beginPath();
-                ctx.arc(x, groundY() + 40, 80, Math.PI, 0);
+                ctx.arc(x + 60, 100, 30, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.fillStyle = "#60a5fa";
+            for (let i = 0; i < 8; i++) {
+                const x = i * 280 - (time * 0.7) % 280;
+                ctx.beginPath();
+                ctx.moveTo(x, groundY());
+                ctx.lineTo(x + 140, groundY() - 140);
+                ctx.lineTo(x + 280, groundY());
                 ctx.fill();
             }
         }
 
-        function drawHamster() {
-            // body
-            const x = hamster.x;
-            const y = hamster.y;
+        /* ===========================
+           PLAYER
+        =========================== */
+        const player = {
+            x: 140, y: 0, vy: 0, w: 34, h: 58, jumps: 0, frame: 0,
+            update() {
+                this.vy += 1.1;
+                this.y += this.vy;
+                if (this.y >= groundY() - this.h) {
+                    this.y = groundY() - this.h;
+                    this.vy = 0;
+                    this.jumps = 0;
+                }
+                this.frame += 0.4;
+            },
+            jump() {
+                if (this.jumps < 2) {
+                    this.vy = -18;
+                    this.jumps++;
+                    jumpSound();
+                }
+            },
+            draw() {
+                const f = Math.floor(this.frame) % 2;
+                ctx.save();
+                ctx.translate(this.x, this.y);
 
-            // shadow
-            ctx.fillStyle = "rgba(0,0,0,0.12)";
-            ctx.beginPath();
-            ctx.ellipse(x + hamster.w/2, groundY() + 10, 18, 6, 0, 0, Math.PI * 2);
-            ctx.fill();
+                ctx.fillStyle = "#fde68a";
+                ctx.beginPath();
+                ctx.arc(this.w / 2, 12, 12, 0, Math.PI * 2);
+                ctx.fill();
 
-            // hamster "sprite" (simple vector)
-            ctx.fillStyle = "#8B5A2B";
-            roundRect(x, y, hamster.w, hamster.h, 10, true);
+                ctx.fillStyle = "#ef4444";
+                ctx.fillRect(8, 24, this.w - 16, 24);
 
-            // belly
-            ctx.fillStyle = "#F2D6B3";
-            roundRect(x + 10, y + 10, hamster.w - 18, hamster.h - 16, 10, true);
+                ctx.strokeStyle = "#020617";
+                ctx.lineWidth = 5;
+                ctx.beginPath();
+                ctx.moveTo(8, 32);
+                ctx.lineTo(f ? 0 : 16, 48);
+                ctx.moveTo(this.w - 8, 32);
+                ctx.lineTo(f ? this.w + 6 : this.w - 16, 48);
+                ctx.moveTo(10, 46);
+                ctx.lineTo(f ? 0 : 16, 68);
+                ctx.moveTo(this.w - 10, 46);
+                ctx.lineTo(f ? this.w + 4 : this.w - 16, 68);
+                ctx.stroke();
 
-            // ear
-            ctx.fillStyle = "#A06A3A";
-            ctx.beginPath();
-            ctx.arc(x + 11, y + 9, 7, 0, Math.PI * 2);
-            ctx.fill();
+                ctx.restore();
+            }
+        };
 
-            // eye
-            ctx.fillStyle = "#111827";
-            ctx.beginPath();
-            ctx.arc(x + 28, y + 14, 3, 0, Math.PI * 2);
-            ctx.fill();
+        /* ===========================
+           OBSTACLES
+        =========================== */
+        const obstacles = [];
 
-            // nose
-            ctx.fillStyle = "#EF4444";
-            ctx.beginPath();
-            ctx.arc(x + 36, y + 18, 2.2, 0, Math.PI * 2);
-            ctx.fill();
-
-            // legs
-            ctx.fillStyle = "#8B5A2B";
-            roundRect(x + 8, y + hamster.h - 8, 10, 8, 4, true);
-            roundRect(x + 22, y + hamster.h - 8, 10, 8, 4, true);
+        function spawnObstacle() {
+            const h = 60 + Math.random() * 120;
+            obstacles.push({x: canvas.clientWidth + 30, y: groundY() - h, w: 34, h});
         }
 
-        function drawObstacle(o) {
-            ctx.fillStyle = "#111827";
-            roundRect(o.x, o.y, o.w, o.h, 6, true);
-
-            // highlight
-            ctx.fillStyle = "rgba(255,255,255,0.18)";
-            roundRect(o.x + 3, o.y + 3, Math.max(4, o.w - 6), 6, 6, true);
+        /* ===========================
+           INPUT
+        =========================== */
+        function action() {
+            if (dead) start();
+            if (!running) start();
+            player.jump();
         }
 
-        function drawCoin(c) {
-            if (c.taken) return;
-            ctx.fillStyle = "#F59E0B";
-            ctx.beginPath();
-            ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
-            ctx.fill();
+        document.addEventListener("keydown", e => {
+            if (e.code === "Space" || e.code === "ArrowUp") action();
+        });
+        canvas.addEventListener("pointerdown", action);
 
-            ctx.strokeStyle = "rgba(0,0,0,0.25)";
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.arc(c.x, c.y, c.r - 3, 0, Math.PI * 2);
-            ctx.stroke();
-            ctx.lineWidth = 1;
-        }
+        /* ===========================
+           LOOP (IMPOSSIBLE SPEED)
+        =========================== */
+        function loop() {
+            drawBackground();
 
-        function roundRect(x, y, w, h, r, fill) {
-            const rr = Math.min(r, w / 2, h / 2);
-            ctx.beginPath();
-            ctx.moveTo(x + rr, y);
-            ctx.arcTo(x + w, y, x + w, y + h, rr);
-            ctx.arcTo(x + w, y + h, x, y + h, rr);
-            ctx.arcTo(x, y + h, x, y, rr);
-            ctx.arcTo(x, y, x + w, y, rr);
-            ctx.closePath();
-            if (fill) ctx.fill();
-        }
+            ctx.fillStyle = "#14532d";
+            ctx.fillRect(0, groundY(), canvas.clientWidth, 5);
 
-        // --- loop
-        function update() {
             if (!running) {
-                clear();
-                drawBackground();
-                drawHamster();
-                requestAnimationFrame(update);
+                player.draw();
+                requestAnimationFrame(loop);
                 return;
             }
 
-            t++;
+            time++;
+            score++;
+            scoreEl.textContent = score;
 
-            // speed ramp
-            speed = Math.min(12, 6 + t / 900);
+            // 🔥 ACCÉLÉRATION FOLLE
+            speed = 8 + score / 120;
 
-            // spawn
-            if (t % 85 === 0) spawnObstacle();
-            if (t % 140 === 0) spawnCoin();
-
-            // physics hamster
-            hamster.vy += gravity;
-            hamster.y += hamster.vy;
-
-            const gy = groundY() - hamster.h;
-            if (hamster.y >= gy) {
-                hamster.y = gy;
-                hamster.vy = 0;
-                hamster.onGround = true;
+            if (time % Math.max(30, 90 - score / 20) === 0) {
+                spawnObstacle();
             }
 
-            // move obstacles
-            for (const o of obstacles) o.x -= speed;
-            while (obstacles.length && obstacles[0].x + obstacles[0].w < -20) obstacles.shift();
+            player.update();
+            obstacles.forEach(o => o.x -= speed);
+            while (obstacles.length && obstacles[0].x < -80) obstacles.shift();
 
-            // move coins
-            for (const c of coins) c.x -= speed;
-            while (coins.length && coins[0].x + coins[0].r < -20) coins.shift();
-
-            // collisions
-            const hamsterRect = { x: hamster.x, y: hamster.y, w: hamster.w, h: hamster.h };
             for (const o of obstacles) {
-                if (aabb(hamsterRect, o)) {
-                    die();
-                    break;
-                }
+                if (hit(player, o)) die();
+                ctx.fillStyle = "#020617";
+                ctx.fillRect(o.x, o.y, o.w, o.h);
             }
 
-            for (const c of coins) {
-                if (!c.taken && circleRectHit(c, hamsterRect)) {
-                    c.taken = true;
-                    score += 25;
-                }
-            }
-
-            // score
-            score += 1;
-            elScore.textContent = String(score);
-
-            // render
-            clear();
-            drawBackground();
-            for (const c of coins) drawCoin(c);
-            for (const o of obstacles) drawObstacle(o);
-            drawHamster();
-
-            requestAnimationFrame(update);
+            player.draw();
+            requestAnimationFrame(loop);
         }
 
         function die() {
-            dead = true;
             running = false;
-
+            dead = true;
+            gameoverEl.classList.remove("hidden");
+            stopMusic();
+            gameOverSound();
             if (score > best) {
                 best = score;
-                localStorage.setItem("hamster_best", String(best));
-                elBest.textContent = String(best);
+                localStorage.setItem("runner_best", best);
+                bestEl.textContent = best;
             }
-
-            gameoverEl.classList.remove("hidden");
-            hint.classList.add("hidden");
         }
 
-        function start(forceReset) {
-            if (forceReset || dead || !startedOnce) {
-                reset();
-            }
-            startedOnce = true;
-            running = true;
+        function start() {
+            obstacles.length = 0;
+            score = time = 0;
             dead = false;
-            hint.classList.add("hidden");
+            running = true;
+            startEl.classList.add("hidden");
             gameoverEl.classList.add("hidden");
+            startMusic();
         }
 
-        requestAnimationFrame(update);
+        /* ===========================
+           UTILS
+        =========================== */
+        function hit(a, b) {
+            return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+        }
+
+        requestAnimationFrame(loop);
     })();
 </script>
 

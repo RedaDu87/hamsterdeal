@@ -37,7 +37,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/geo/**").permitAll()
                         .requestMatchers("/", "/ads/**", "/ad/**", "/login", "/register",
                                 "/css/**", "/js/**", "/uploads/**", "/profiles/**",
-                                "/favicon.ico", "/api/auth/**","/api/ads/**","/api/auth2/**","/api/profile/**")
+                                "/favicon.ico", "/api/auth/**", "/api/ads/**", "/api/auth2/**", "/api/profile/**", "/hamster-game")
                         .permitAll()
                         .requestMatchers(
                                 "/ad/new", "/ad/save", "/ad/edit/**", "/ad/update/**",

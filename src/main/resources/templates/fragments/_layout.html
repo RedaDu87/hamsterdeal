@@ -194,8 +194,17 @@
                 <li><a th:href="@{/}" class="hover:text-white" th:text="#{nav.home}"></a></li>
                 <li><a th:href="@{/ads}" class="hover:text-white" th:text="#{nav.browse}"></a></li>
                 <li><a th:href="@{/ad/new}" class="hover:text-white" th:text="#{nav.publish}"></a></li>
+
+                <!-- 🎮 JEU -->
+                <li>
+                    <a th:href="@{/hamster-game}"
+                       class="hover:text-white flex items-center gap-1"
+                       th:text="#{footer.game}">
+                    </a>
+                </li>
             </ul>
         </div>
+
 
         <div>
             <h4 class="text-white font-semibold mb-2" th:text="#{footer.legal}"></h4>

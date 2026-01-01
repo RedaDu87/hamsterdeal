@@ -9,31 +9,43 @@
     <!-- HEADER PROFIL -->
     <div class="bg-gradient-to-r from-orange-500 to-red-600 text-white p-6 rounded-2xl shadow-lg">
         <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-6 text-center sm:text-left">
+
             <!-- Avatar -->
             <div class="mx-auto sm:mx-0 w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-md flex items-center justify-center bg-white">
-                <img th:if="${user.photoUrl != null}" th:src="@{${user.photoUrl}}" alt="Avatar" class="w-full h-full object-cover"/>
+                <img th:if="${user.photoUrl != null}"
+                     th:src="@{${user.photoUrl}}"
+                     th:alt="#{profile.avatar.alt}"
+                     class="w-full h-full object-cover"/>
                 <span th:if="${user.photoUrl == null}"
-                      th:text="${user.firstName != null ? user.firstName.substring(0,1) : 'U'}"
-                      class="text-4xl font-bold text-orange-600">U</span>
+                      th:text="${user.firstName != null ? user.firstName.substring(0,1) : #{profile.avatar.fallback}}"
+                      class="text-4xl font-bold text-orange-600">
+                </span>
             </div>
 
             <!-- Infos -->
             <div class="mt-4 sm:mt-0">
-                <h1 class="text-2xl sm:text-3xl font-extrabold" th:text="${user.firstName + ' ' + user.lastName}">Utilisateur</h1>
-                <p class="text-sm opacity-90" th:text="${user.email}">email@exemple.com</p>
-                <p class="text-sm opacity-90" th:text="${user.phone}">+41 ...</p>
+                <h1 class="text-2xl sm:text-3xl font-extrabold"
+                    th:text="${user.firstName + ' ' + user.lastName}">
+                </h1>
+                <p class="text-sm opacity-90" th:text="${user.email}"></p>
+                <p class="text-sm opacity-90" th:text="${user.phone}"></p>
             </div>
         </div>
     </div>
 
     <!-- FORMULAIRE PROFIL -->
     <div class="bg-white p-6 rounded-xl shadow-md">
-        <h2 class="text-lg sm:text-xl font-bold mb-4 text-gray-700">Modifier mes informations</h2>
+        <h2 class="text-lg sm:text-xl font-bold mb-4 text-gray-700"
+            th:text="#{profile.form.title}">
+        </h2>
 
         <form th:action="@{/profile}" th:object="${user}" method="post" enctype="multipart/form-data" class="space-y-6">
+
             <!-- Photo -->
             <div>
-                <label class="block text-sm font-medium text-gray-700">Photo de profil</label>
+                <label class="block text-sm font-medium text-gray-700"
+                       th:text="#{profile.form.photo}">
+                </label>
                 <input type="file" name="photoFile" accept="image/*"
                        class="mt-2 w-full border rounded-lg p-2 file:mr-4 file:py-2 file:px-4
                               file:rounded-full file:border-0 file:text-sm file:font-semibold
@@ -43,35 +55,46 @@
             <!-- Nom & prénom -->
             <div class="grid sm:grid-cols-2 gap-4">
                 <label>
-                    <span class="block text-sm font-medium text-gray-700">Prénom</span>
+                    <span class="block text-sm font-medium text-gray-700"
+                          th:text="#{profile.form.firstname}">
+                    </span>
                     <input type="text" th:field="*{firstName}"
                            class="mt-2 border rounded-lg p-3 w-full focus:ring-2 focus:ring-orange-500"/>
                 </label>
+
                 <label>
-                    <span class="block text-sm font-medium text-gray-700">Nom</span>
+                    <span class="block text-sm font-medium text-gray-700"
+                          th:text="#{profile.form.lastname}">
+                    </span>
                     <input type="text" th:field="*{lastName}"
                            class="mt-2 border rounded-lg p-3 w-full focus:ring-2 focus:ring-orange-500"/>
                 </label>
             </div>
 
-            <!-- Email (readonly) & Téléphone -->
+            <!-- Email & Téléphone -->
             <div class="grid sm:grid-cols-2 gap-4">
                 <label>
-                    <span class="block text-sm font-medium text-gray-700">Email</span>
+                    <span class="block text-sm font-medium text-gray-700"
+                          th:text="#{profile.form.email}">
+                    </span>
                     <input type="text" th:value="${user.email}" disabled
                            class="mt-2 border rounded-lg p-3 w-full bg-gray-100"/>
                 </label>
+
                 <label>
-                    <span class="block text-sm font-medium text-gray-700">Téléphone</span>
-                    <input type="text" th:field="*{phone}" placeholder="+41 79 123 45 67"
+                    <span class="block text-sm font-medium text-gray-700"
+                          th:text="#{profile.form.phone}">
+                    </span>
+                    <input type="text" th:field="*{phone}"
+                           th:placeholder="#{profile.form.phone.placeholder}"
                            class="mt-2 border rounded-lg p-3 w-full focus:ring-2 focus:ring-orange-500"/>
                 </label>
             </div>
 
             <div class="flex justify-end">
                 <button type="submit"
-                        class="bg-gradient-to-r from-orange-500 to-red-600 text-white font-semibold px-6 py-2 rounded-lg shadow hover:scale-105 transition">
-                    Sauvegarder
+                        class="bg-gradient-to-r from-orange-500 to-red-600 text-white font-semibold px-6 py-2 rounded-lg shadow hover:scale-105 transition"
+                        th:text="#{profile.form.submit}">
                 </button>
             </div>
         </form>
@@ -79,332 +102,197 @@
 
     <!-- FILTRES -->
     <div class="bg-white p-6 rounded-xl shadow-md" id="filtersCard">
-        <h2 class="text-lg sm:text-xl font-bold mb-4 text-gray-700">Filtrer mes annonces</h2>
+        <h2 class="text-lg sm:text-xl font-bold mb-4 text-gray-700"
+            th:text="#{profile.filters.title}">
+        </h2>
 
-        <!-- IMPORTANT : on garde size via hidden + on reset page=0 -->
         <form id="filterForm" th:action="@{/profile}" method="get"
               class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+
             <input type="hidden" name="page" value="0"/>
             <input type="hidden" name="size" th:value="${param.size != null ? param.size[0] : '10'}"/>
 
-            <input type="text" name="title" th:value="${param.title}" placeholder="Titre"
+            <input type="text" name="title" th:value="${param.title}"
+                   th:placeholder="#{profile.filters.title.placeholder}"
                    class="border rounded-lg p-2 focus:ring-2 focus:ring-orange-500"/>
 
-            <input type="text" name="category" th:value="${param.category}" placeholder="Catégorie"
+            <input type="text" name="category" th:value="${param.category}"
+                   th:placeholder="#{profile.filters.category.placeholder}"
                    class="border rounded-lg p-2 focus:ring-2 focus:ring-orange-500"/>
 
             <div class="flex space-x-2">
-                <input type="number" name="minPrice" th:value="${param.minPrice}" placeholder="Min"
+                <input type="number" name="minPrice" th:value="${param.minPrice}"
+                       th:placeholder="#{profile.filters.price.min}"
                        class="w-1/2 border rounded-lg p-2 focus:ring-2 focus:ring-orange-500"/>
-                <input type="number" name="maxPrice" th:value="${param.maxPrice}" placeholder="Max"
+
+                <input type="number" name="maxPrice" th:value="${param.maxPrice}"
+                       th:placeholder="#{profile.filters.price.max}"
                        class="w-1/2 border rounded-lg p-2 focus:ring-2 focus:ring-orange-500"/>
             </div>
 
             <input type="date" name="fromDate" th:value="${param.fromDate}"
                    class="border rounded-lg p-2 focus:ring-2 focus:ring-orange-500"/>
+
             <input type="date" name="toDate" th:value="${param.toDate}"
                    class="border rounded-lg p-2 focus:ring-2 focus:ring-orange-500"/>
 
             <div class="sm:col-span-2 md:col-span-5 flex justify-end">
                 <button type="submit"
-                        class="bg-blue-600 text-white px-5 py-2 rounded-lg shadow hover:bg-blue-700 transition w-full sm:w-auto">
-                    Filtrer
+                        class="bg-blue-600 text-white px-5 py-2 rounded-lg shadow hover:bg-blue-700 transition w-full sm:w-auto"
+                        th:text="#{profile.filters.submit}">
                 </button>
             </div>
         </form>
     </div>
 
-    <!-- SECTION ANNONCES (celle-ci est remplacée en AJAX) -->
+    <!-- LISTE DES ANNONCES -->
     <div id="adsSection" class="space-y-3">
 
-        <!-- LISTE DES ANNONCES -->
         <div class="bg-white rounded-xl shadow-lg overflow-hidden">
             <table class="w-full border-collapse text-sm">
                 <thead class="bg-gray-50 text-gray-600 uppercase text-xs font-semibold">
                 <tr>
-                    <th class="p-3 text-left">Titre</th>
-                    <th class="p-3 text-right">Prix</th>
-                    <th class="p-3 text-left hidden sm:table-cell">Catégorie</th>
-                    <th class="p-3 text-left hidden md:table-cell">Publié</th>
-                    <th class="p-3 text-center">Actions</th>
+                    <th class="p-3 text-left" th:text="#{profile.table.title}"></th>
+                    <th class="p-3 text-right" th:text="#{profile.table.price}"></th>
+                    <th class="p-3 text-left hidden sm:table-cell" th:text="#{profile.table.category}"></th>
+                    <th class="p-3 text-left hidden md:table-cell" th:text="#{profile.table.published}"></th>
+                    <th class="p-3 text-center" th:text="#{profile.table.actions}"></th>
                 </tr>
                 </thead>
 
-                <tbody class="divide-y divide-gray-200" id="adsTbody">
+                <tbody class="divide-y divide-gray-200">
                 <tr th:each="ad : ${ads}" class="hover:bg-gray-50 transition">
 
-                    <td class="p-3 break-words">
+                    <td class="p-3">
                         <a th:href="@{/ad/{id}(id=${ad.id})}"
                            class="font-medium text-blue-600 hover:underline"
                            th:text="${ad.title}">
                         </a>
                     </td>
 
-                    <td class="p-3 text-right font-semibold whitespace-nowrap">
-                        <span th:text="|${#numbers.formatDecimal(ad.price,0,'NONE',2,'POINT')} CHF|"></span>
+                    <td class="p-3 text-right font-semibold"
+                        th:text="|${#numbers.formatDecimal(ad.price,0,'NONE',2,'POINT')} CHF|">
                     </td>
 
                     <td class="p-3 hidden sm:table-cell" th:text="${ad.category}"></td>
 
-                    <td class="p-3 text-gray-500 hidden md:table-cell"
+                    <td class="p-3 hidden md:table-cell text-gray-500"
                         th:text="${#temporals.format(ad.createdAt, 'dd/MM/yyyy')}">
                     </td>
 
                     <td class="p-3 text-center">
-                        <div class="flex flex-col sm:flex-row justify-center gap-2">
+                        <div class="flex flex-col sm:flex-row gap-2 justify-center">
                             <a th:href="@{/ad/edit/{id}(id=${ad.id})}"
-                               class="px-3 py-1 text-xs rounded-lg bg-yellow-100 text-yellow-700 hover:bg-yellow-200">
-                                Modifier
+                               class="px-3 py-1 text-xs rounded-lg bg-yellow-100 text-yellow-700 hover:bg-yellow-200"
+                               th:text="#{profile.table.edit}">
                             </a>
-
-                            <!-- IMPORTANT: pas de onclick (sinon après refresh ça devient fragile).
-                                 On utilise data-delete + délégation d'événements -->
                             <button type="button"
                                     class="px-3 py-1 text-xs rounded-lg bg-red-100 text-red-700 hover:bg-red-200"
-                                    th:attr="data-delete-ad-id=${ad.id}">
-                                Supprimer
+                                    th:attr="data-delete-ad-id=${ad.id}"
+                                    th:text="#{profile.table.delete}">
                             </button>
                         </div>
                     </td>
                 </tr>
 
                 <tr th:if="${#lists.isEmpty(ads)}">
-                    <td colspan="5" class="text-center py-6 text-gray-400">
-                        Aucune annonce trouvée
+                    <td colspan="5" class="text-center py-6 text-gray-400"
+                        th:text="#{profile.table.empty}">
                     </td>
                 </tr>
                 </tbody>
             </table>
-
-            <!-- PAGINATION -->
-            <div class="flex justify-center items-center gap-2 p-4"
-                 th:if="${page != null and page.totalPages > 1}">
-
-                <!-- Précédent -->
-                <a th:if="${page.page > 0}"
-                   data-ajax="1"
-                   th:href="@{/profile(
-                        page=${page.page - 1},
-                        size=${param.size != null ? param.size[0] : 10},
-                        title=${param.title},
-                        category=${param.category},
-                        minPrice=${param.minPrice},
-                        maxPrice=${param.maxPrice},
-                        fromDate=${param.fromDate},
-                        toDate=${param.toDate}
-                   )}"
-                   class="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300">
-                    ‹
-                </a>
-
-                <!-- Pages -->
-                <a th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
-                   data-ajax="1"
-                   th:href="@{/profile(
-                        page=${i},
-                        size=${param.size != null ? param.size[0] : 10},
-                        title=${param.title},
-                        category=${param.category},
-                        minPrice=${param.minPrice},
-                        maxPrice=${param.maxPrice},
-                        fromDate=${param.fromDate},
-                        toDate=${param.toDate}
-                   )}"
-                   th:text="${i + 1}"
-                   th:classappend="${i == page.page}
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-100 hover:bg-gray-200'"
-                   class="px-3 py-1 rounded-lg text-sm">
-                </a>
-
-                <!-- Suivant -->
-                <a th:if="${page.page < page.totalPages - 1}"
-                   data-ajax="1"
-                   th:href="@{/profile(
-                        page=${page.page + 1},
-                        size=${param.size != null ? param.size[0] : 10},
-                        title=${param.title},
-                        category=${param.category},
-                        minPrice=${param.minPrice},
-                        maxPrice=${param.maxPrice},
-                        fromDate=${param.fromDate},
-                        toDate=${param.toDate}
-                   )}"
-                   class="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300">
-                    ›
-                </a>
-
-            </div>
         </div>
+        <!-- PAGINATION -->
+        <div class="flex justify-center items-center gap-2 p-4"
+             th:if="${page != null and page.totalPages > 1}">
 
-        <!-- SIZE (nombre d'éléments / page) -->
-        <form id="sizeForm" method="get" th:action="@{/profile}" class="flex justify-end p-2">
-            <!-- garder tous les filtres dans le form size -->
-            <input type="hidden" name="page" value="0"/>
-            <input type="hidden" name="title" th:value="${param.title}"/>
-            <input type="hidden" name="category" th:value="${param.category}"/>
-            <input type="hidden" name="minPrice" th:value="${param.minPrice}"/>
-            <input type="hidden" name="maxPrice" th:value="${param.maxPrice}"/>
-            <input type="hidden" name="fromDate" th:value="${param.fromDate}"/>
-            <input type="hidden" name="toDate" th:value="${param.toDate}"/>
+            <!-- Précédent -->
+            <a th:if="${page.page > 0}"
+               data-ajax="1"
+               th:href="@{/profile(
+            page=${page.page - 1},
+            size=${param.size != null ? param.size[0] : 10},
+            title=${param.title},
+            category=${param.category},
+            minPrice=${param.minPrice},
+            maxPrice=${param.maxPrice},
+            fromDate=${param.fromDate},
+            toDate=${param.toDate}
+       )}"
+               class="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300"
+               th:title="#{pagination.previous}">
+                ‹
+            </a>
 
-            <select name="size" class="border rounded-lg p-1 text-sm">
-                <option value="10"  th:selected="${param.size != null ? param.size[0] == '10'  : true}">10</option>
-                <option value="20"  th:selected="${param.size != null and param.size[0] == '20'}">20</option>
-                <option value="50"  th:selected="${param.size != null and param.size[0] == '50'}">50</option>
-                <option value="100" th:selected="${param.size != null and param.size[0] == '100'}">100</option>
-            </select>
-        </form>
+            <!-- Pages -->
+            <a th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+               data-ajax="1"
+               th:href="@{/profile(
+            page=${i},
+            size=${param.size != null ? param.size[0] : 10},
+            title=${param.title},
+            category=${param.category},
+            minPrice=${param.minPrice},
+            maxPrice=${param.maxPrice},
+            fromDate=${param.fromDate},
+            toDate=${param.toDate}
+       )}"
+               th:text="${i + 1}"
+               th:classappend="${i == page.page}
+            ? 'bg-blue-600 text-white'
+            : 'bg-gray-100 hover:bg-gray-200'"
+               class="px-3 py-1 rounded-lg text-sm"
+               th:title="|#{pagination.page} ${i + 1}|">
+            </a>
+
+            <!-- Suivant -->
+            <a th:if="${page.page < page.totalPages - 1}"
+               data-ajax="1"
+               th:href="@{/profile(
+            page=${page.page + 1},
+            size=${param.size != null ? param.size[0] : 10},
+            title=${param.title},
+            category=${param.category},
+            minPrice=${param.minPrice},
+            maxPrice=${param.maxPrice},
+            fromDate=${param.fromDate},
+            toDate=${param.toDate}
+       )}"
+               class="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300"
+               th:title="#{pagination.next}">
+                ›
+            </a>
+
+        </div>
 
     </div>
 </div>
 
-<script>
-    // ====== AJAX PARTIAL REFRESH (Filters / Pagination / Size / Delete) ======
-    (function () {
-        const adsSection = document.getElementById('adsSection');
-        const filterForm = document.getElementById('filterForm');
+<script th:inline="javascript">
+    const MSG_CONFIRM_DELETE = /*[[#{profile.js.confirmDelete}]]*/ '';
+    const MSG_DELETE_ERROR = /*[[#{profile.js.deleteError}]]*/ '';
 
-        if (!adsSection || !filterForm) return;
+    document.addEventListener('click', async (e) => {
+        const btn = e.target.closest('button[data-delete-ad-id]');
+        if (!btn) return;
 
-        // Remplacer uniquement #adsSection depuis une page HTML complète
-        async function loadAdsSection(url, {pushState = true} = {}) {
-            const currentScrollY = window.scrollY;
+        if (!confirm(MSG_CONFIRM_DELETE)) return;
 
-            const res = await fetch(url, {
+        const adId = btn.dataset.deleteAdId;
+        const row = btn.closest('tr');
+
+        try {
+            const res = await fetch(`/ad/delete/${adId}`, {
+                method: 'POST',
                 headers: {'X-Requested-With': 'XMLHttpRequest'}
             });
-            if (!res.ok) throw new Error('HTTP ' + res.status);
-
-            const html = await res.text();
-            const doc = new DOMParser().parseFromString(html, 'text/html');
-            const newAdsSection = doc.getElementById('adsSection');
-
-            if (!newAdsSection) {
-                window.location.href = url; // fallback
-                return;
-            }
-
-            adsSection.innerHTML = newAdsSection.innerHTML;
-
-            if (pushState) {
-                history.pushState({url}, '', url);
-            }
-
-            // IMPORTANT: ne pas remonter en haut
-            window.scrollTo({top: currentScrollY, left: 0});
+            if (!(res.ok || res.status === 302)) throw new Error();
+            if (row) row.remove();
+        } catch {
+            alert(MSG_DELETE_ERROR);
         }
-
-        function formToUrl(form) {
-            const action = form.getAttribute('action') || window.location.pathname;
-            const params = new URLSearchParams(new FormData(form));
-
-            // enlever champs vides (propre)
-            for (const [k, v] of Array.from(params.entries())) {
-                if (v === null || v === undefined || String(v).trim() === '') params.delete(k);
-            }
-
-            return action + (params.toString() ? ('?' + params.toString()) : '');
-        }
-
-        // Filtrer (AJAX)
-        filterForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            try {
-                // Synchroniser size hidden avec le select actuel (dans adsSection)
-                const currentSize = (document.querySelector('#sizeForm select[name="size"]')?.value) || '10';
-                filterForm.querySelector('input[name="size"]').value = currentSize;
-
-                const url = formToUrl(filterForm);
-                await loadAdsSection(url, {pushState: true});
-            } catch (err) {
-                console.error(err);
-                window.location.href = formToUrl(filterForm);
-            }
-        });
-
-        // Size (AJAX) : délégation ROBUSTE (car #sizeForm est remplacé)
-        document.addEventListener('change', async (e) => {
-            const select = e.target.closest('#sizeForm select[name="size"]');
-            if (!select) return;
-
-            try {
-                const sizeForm = document.getElementById('sizeForm');
-                if (!sizeForm) return;
-
-                // mettre aussi à jour le hidden size du filtre pour la prochaine fois
-                filterForm.querySelector('input[name="size"]').value = select.value;
-
-                const url = formToUrl(sizeForm);
-                await loadAdsSection(url, {pushState: true});
-            } catch (err) {
-                console.error(err);
-                const sizeForm = document.getElementById('sizeForm');
-                window.location.href = sizeForm ? formToUrl(sizeForm) : window.location.href;
-            }
-        });
-
-        // Pagination (AJAX) : délégation (car remplacé)
-        adsSection.addEventListener('click', async (e) => {
-            const a = e.target.closest('a[data-ajax="1"]');
-            if (!a) return;
-
-            e.preventDefault();
-            const url = a.getAttribute('href');
-            if (!url) return;
-
-            try {
-                await loadAdsSection(url, {pushState: true});
-            } catch (err) {
-                console.error(err);
-                window.location.href = url;
-            }
-        });
-
-        // Delete (AJAX) : délégation (car remplacé)
-        adsSection.addEventListener('click', async (e) => {
-            const btn = e.target.closest('button[data-delete-ad-id]');
-            if (!btn) return;
-
-            e.preventDefault();
-            if (!confirm('Supprimer cette annonce ?')) return;
-
-            const adId = btn.getAttribute('data-delete-ad-id');
-            const row = btn.closest('tr');
-
-            try {
-                const res = await fetch(`/ad/delete/${adId}`, {
-                    method: 'POST',
-                    headers: {'X-Requested-With': 'XMLHttpRequest'}
-                });
-
-                // Si ton endpoint renvoie 302 (redirect), fetch considère OK=false.
-                // Donc on accepte aussi 302.
-                if (!(res.ok || res.status === 302)) throw new Error('HTTP ' + res.status);
-
-                // animation + suppression visuelle
-                if (row) {
-                    row.style.transition = 'opacity 0.25s';
-                    row.style.opacity = '0';
-                    setTimeout(() => row.remove(), 250);
-                }
-            } catch (err) {
-                console.error(err);
-                alert('Erreur lors de la suppression');
-            }
-        });
-
-        // Back/Forward (AJAX)
-        window.addEventListener('popstate', async (e) => {
-            try {
-                const url = (e.state && e.state.url) ? e.state.url : window.location.href;
-                await loadAdsSection(url, {pushState: false});
-            } catch (err) {
-                console.error(err);
-                window.location.href = window.location.href;
-            }
-        });
-    })();
+    });
 </script>
 
 </body>

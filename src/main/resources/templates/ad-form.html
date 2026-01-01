@@ -1,9 +1,15 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="fr"
+      th:replace="~{fragments/_layout :: base(~{::body})}">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title th:text="${ad != null and ad.id != null ? 'Modifier annonce' : 'Nouvelle annonce'}">Annonce</title>
+
+    <title th:with="isEdit=${ad != null and ad.id != null}"
+           th:text="${isEdit} ? #{ad.form.title.edit} : #{ad.form.title.new}">
+        Annonce
+    </title>
 
     <!-- Tailwind via CDN (si tu utilises déjà Tailwind autrement, supprime ceci) -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -19,15 +25,14 @@
     <div class="bg-white/80 backdrop-blur rounded-2xl shadow-lg overflow-hidden">
 
         <!-- Header -->
-        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 md:p-8 text-white">
+        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 md:p-8 text-white"
+             th:with="isEdit=${ad != null and ad.id != null}">
             <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight"
-                th:text="${ad != null and ad.id != null ? 'Modifier annonce' : 'Nouvelle annonce'}">
+                th:text="${isEdit} ? #{ad.form.header.edit} : #{ad.form.header.new}">
                 Nouvelle annonce
             </h1>
             <p class="opacity-90 mt-1 text-sm md:text-base"
-               th:text="${ad != null and ad.id != null
-             ? 'Modifie les détails de ton annonce et enregistre les changements.'
-             : 'Décris ton article, ajoute des photos et publie en 1 clic.'}">
+               th:text="${isEdit} ? #{ad.form.header.subtitle.edit} : #{ad.form.header.subtitle.new}">
                 Décris ton article, ajoute des photos et publie en 1 clic.
             </p>
         </div>
@@ -45,48 +50,50 @@
             <!-- Titre / Description -->
             <section class="grid gap-6 md:grid-cols-2">
                 <label class="block">
-                    <span class="font-semibold text-sm text-gray-700">Titre</span>
+                    <span class="font-semibold text-sm text-gray-700" th:text="#{ad.form.field.title}">Titre</span>
                     <input type="text" th:field="*{title}" required
                            class="mt-1 w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"/>
                 </label>
 
                 <label class="block md:col-span-2">
-                    <span class="font-semibold text-sm text-gray-700">Description</span>
+                    <span class="font-semibold text-sm text-gray-700"
+                          th:text="#{ad.form.field.description}">Description</span>
                     <textarea th:field="*{description}" rows="4" required
                               class="mt-1 w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                              placeholder="État, particularités, accessoires, raison de la vente…"></textarea>
+                              th:placeholder="#{ad.form.placeholder.description}"></textarea>
                 </label>
             </section>
 
             <!-- Prix / Catégorie -->
             <section class="grid gap-6 md:grid-cols-2">
                 <label class="block">
-                    <span class="font-semibold text-sm text-gray-700">Prix (CHF)</span>
+                    <span class="font-semibold text-sm text-gray-700" th:text="#{ad.form.field.price}">Prix (CHF)</span>
                     <input type="number" step="0.01" min="0" th:field="*{price}" required
                            class="mt-1 w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"/>
                 </label>
 
                 <label class="block">
-                    <span class="font-semibold text-sm text-gray-700">Catégorie</span>
+                    <span class="font-semibold text-sm text-gray-700"
+                          th:text="#{ad.form.field.category}">Catégorie</span>
                     <select th:field="*{category}" required
                             class="mt-1 w-full p-3 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
-                        <option value="">Choisir…</option>
-                        <option value="car">Voitures</option>
-                        <option value="electronics">Électronique</option>
-                        <option value="home">Maison</option>
-                        <option value="fashion">Mode</option>
-                        <option value="sports">Sport</option>
-                        <option value="toys">Jouets</option>
-                        <option value="books">Livres</option>
-                        <option value="music">Musique</option>
-                        <option value="tools">Outils</option>
-                        <option value="garden">Jardin</option>
-                        <option value="pets">Animaux</option>
-                        <option value="jobs">Emplois</option>
-                        <option value="services">Services</option>
-                        <option value="realestate">Immobilier</option>
-                        <option value="collectibles">Collections</option>
-                        <option value="other">Autre</option>
+                        <option value="" th:text="#{ad.form.category.choose}">Choisir…</option>
+                        <option value="car" th:text="#{ad.form.category.car}">Voitures</option>
+                        <option value="electronics" th:text="#{ad.form.category.electronics}">Électronique</option>
+                        <option value="home" th:text="#{ad.form.category.home}">Maison</option>
+                        <option value="fashion" th:text="#{ad.form.category.fashion}">Mode</option>
+                        <option value="sports" th:text="#{ad.form.category.sports}">Sport</option>
+                        <option value="toys" th:text="#{ad.form.category.toys}">Jouets</option>
+                        <option value="books" th:text="#{ad.form.category.books}">Livres</option>
+                        <option value="music" th:text="#{ad.form.category.music}">Musique</option>
+                        <option value="tools" th:text="#{ad.form.category.tools}">Outils</option>
+                        <option value="garden" th:text="#{ad.form.category.garden}">Jardin</option>
+                        <option value="pets" th:text="#{ad.form.category.pets}">Animaux</option>
+                        <option value="jobs" th:text="#{ad.form.category.jobs}">Emplois</option>
+                        <option value="services" th:text="#{ad.form.category.services}">Services</option>
+                        <option value="realestate" th:text="#{ad.form.category.realestate}">Immobilier</option>
+                        <option value="collectibles" th:text="#{ad.form.category.collectibles}">Collections</option>
+                        <option value="other" th:text="#{ad.form.category.other}">Autre</option>
                     </select>
                 </label>
             </section>
@@ -94,10 +101,10 @@
             <!-- Localisation -->
             <section class="grid gap-6 md:grid-cols-2">
                 <label class="block">
-                    <span class="font-semibold text-sm text-gray-700">Canton</span>
+                    <span class="font-semibold text-sm text-gray-700" th:text="#{ad.form.field.canton}">Canton</span>
                     <select th:field="*{canton}" required
                             class="mt-1 w-full p-3 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
-                        <option value="">—</option>
+                        <option value="" th:text="#{ad.form.canton.none}">—</option>
                         <option value="AG">AG</option><option value="AI">AI</option><option value="AR">AR</option>
                         <option value="BE">BE</option><option value="BL">BL</option><option value="BS">BS</option>
                         <option value="FR">FR</option><option value="GE">GE</option><option value="GL">GL</option>
@@ -111,7 +118,7 @@
                 </label>
 
                 <label class="block">
-                    <span class="font-semibold text-sm text-gray-700">Ville</span>
+                    <span class="font-semibold text-sm text-gray-700" th:text="#{ad.form.field.city}">Ville</span>
                     <input type="text" th:field="*{city}"
                            class="mt-1 w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"/>
                 </label>
@@ -123,9 +130,11 @@
                      class="space-y-3">
 
                 <div class="flex items-center justify-between gap-3 flex-wrap">
-                    <h2 class="text-lg font-semibold">Photos existantes</h2>
+                    <h2 class="text-lg font-semibold" th:text="#{ad.form.existingPhotos.title}">Photos existantes</h2>
                     <p class="text-sm text-gray-600">
-                        Total : <span class="font-semibold" id="existingCountText" th:text="${existingCount}">0</span> / 20
+                        <span th:text="#{ad.form.existingPhotos.totalLabel}">Total :</span>
+                        <span class="font-semibold" id="existingCountText" th:text="${existingCount}">0</span>
+                        <span th:text="#{ad.form.existingPhotos.maxSuffix}">/ 20</span>
                     </p>
                 </div>
 
@@ -144,13 +153,15 @@
                         <button type="button"
                                 class="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded hover:bg-red-700 shadow"
                                 th:attr="data-del-url=@{/ad/{adId}/image/{idx}/delete(adId=${ad.id}, idx=${stat.index})}"
-                                onclick="deleteExistingImage(this)">
+                                onclick="deleteExistingImage(this)"
+                                th:text="#{ad.form.existingPhotos.deleteButton}">
                             Supprimer
                         </button>
                     </div>
                 </div>
 
-                <div class="text-sm text-gray-500" th:if="${images == null or #lists.isEmpty(images)}">
+                <div class="text-sm text-gray-500" th:if="${images == null or #lists.isEmpty(images)}"
+                     th:text="#{ad.form.existingPhotos.empty}">
                     Aucune photo existante.
                 </div>
             </section>
@@ -159,13 +170,13 @@
             <section class="space-y-3"
                      th:with="existingCount=${(images != null) ? #lists.size(images) : 0}">
                 <div class="flex items-center justify-between flex-wrap gap-3">
-                    <h2 class="text-lg font-semibold">Ajouter des photos</h2>
+                    <h2 class="text-lg font-semibold" th:text="#{ad.form.addPhotos.title}">Ajouter des photos</h2>
                     <p class="text-sm text-gray-700">
-                        Il vous reste
+                        <span th:text="#{ad.form.addPhotos.remaining.prefix}">Il vous reste</span>
                         <span id="remainingCount"
                               class="font-semibold"
                               th:text="${20 - existingCount}">20</span>
-                        photo(s) à ajouter
+                        <span th:text="#{ad.form.addPhotos.remaining.suffix}">photo(s) à ajouter</span>
                     </p>
                 </div>
 
@@ -192,12 +203,16 @@
                     </svg>
 
                     <p class="text-sm text-gray-600">
-                        <strong>Glissez-déposez</strong> vos images ici<br>
-                        ou <span class="text-blue-600 underline">cliquez pour sélectionner</span>
+                        <strong th:text="#{ad.form.dropzone.strong}">Glissez-déposez</strong>
+                        <span th:text="#{ad.form.dropzone.text1}">vos images ici</span><br>
+                        <span th:text="#{ad.form.dropzone.or}">ou</span>
+                        <span class="text-blue-600 underline" th:text="#{ad.form.dropzone.click}">cliquez pour sélectionner</span>
                     </p>
 
                     <p class="mt-2 text-xs text-gray-500">
-                        Maximum <span class="font-semibold">20</span> photos par annonce (existantes + nouvelles).
+                        <span th:text="#{ad.form.dropzone.max.prefix}">Maximum</span>
+                        <span class="font-semibold">20</span>
+                        <span th:text="#{ad.form.dropzone.max.suffix}">photos par annonce (existantes + nouvelles).</span>
                     </p>
                 </div>
 
@@ -205,16 +220,16 @@
                 <div id="uploadHint"
                      class="hidden text-sm rounded-lg border border-amber-200 bg-amber-50 text-amber-800 px-3 py-2"></div>
 
-                <!-- PREVIEW nouvelles images (sous la zone drag&drop) -->
+                <!-- PREVIEW nouvelles images -->
                 <div id="preview"
                      class="mt-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
             </section>
 
             <!-- Bouton -->
-            <div class="pt-2">
+            <div class="pt-2" th:with="isEdit=${ad != null and ad.id != null}">
                 <button type="submit"
                         class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl shadow transition"
-                        th:text="${ad != null and ad.id != null ? 'Mettre à jour' : 'Publier l’annonce'}">
+                        th:text="${isEdit} ? #{ad.form.submit.update} : #{ad.form.submit.publish}">
                     Publier l’annonce
                 </button>
             </div>
@@ -223,9 +238,20 @@
     </div>
 </div>
 
-<script>
+<script th:inline="javascript">
     // ====== CONFIG ======
     const MAX_TOTAL = 20;
+
+    // ====== I18N STRINGS ======
+    const MSG_CONFIRM_DELETE = /*[[#{ad.js.confirmDeleteExisting}]]*/ "Supprimer cette photo ?";
+    const MSG_DELETE_ERROR = /*[[#{ad.js.alertDeleteError}]]*/ "Erreur lors de la suppression.";
+    const MSG_NO_IMAGE = /*[[#{ad.js.hintNoImageDetected}]]*/ "Aucun fichier image détecté.";
+    const MSG_LIMIT_REACHED = /*[[#{ad.js.hintLimitAlreadyReached}]]*/ "Tu as déjà atteint la limite de 20 photos (existantes + nouvelles).";
+    const MSG_LIMIT_ADDED_TPL = /*[[#{ad.js.hintLimitAddedOnly}]]*/ "Limite atteinte : seules {0} photo(s) ont été ajoutées.";
+
+    function formatMsgLimitAddedOnly(n) {
+        return String(MSG_LIMIT_ADDED_TPL).replace('{0}', String(n));
+    }
 
     // ====== CSRF (Spring Security) for AJAX POST ======
     function getCsrf() {
@@ -236,7 +262,7 @@
 
     // ====== DELETE EXISTING IMAGE (AJAX, no nested form) ======
     async function deleteExistingImage(btn) {
-        if (!confirm("Supprimer cette photo ?")) return;
+        if (!confirm(MSG_CONFIRM_DELETE)) return;
 
         const url = btn.dataset.delUrl;
         if (!url) return;
@@ -257,7 +283,7 @@
                 setTimeout(() => card.remove(), 200);
             }
 
-            // Update counters (existingCount decreases => remaining increases)
+            // Update counters
             const dropzone = document.getElementById('dropzone');
             const existingCountText = document.getElementById('existingCountText');
             const remainingCountEl = document.getElementById('remainingCount');
@@ -269,13 +295,12 @@
 
                 if (existingCountText) existingCountText.textContent = String(newExisting);
 
-                // remaining = MAX - existing - selectedNew
                 const selectedNew = window.__selectedFiles ? window.__selectedFiles.length : 0;
                 remainingCountEl.textContent = String(Math.max(0, MAX_TOTAL - newExisting - selectedNew));
             }
 
         } catch (e) {
-            alert("Erreur lors de la suppression.");
+            alert(MSG_DELETE_ERROR);
             console.error(e);
         }
     }
@@ -313,7 +338,6 @@
         }
 
         function syncInputFiles() {
-            // Important pour Spring: on remplace fileInput.files par la liste "selectedFiles"
             const dt = new DataTransfer();
             selectedFiles.forEach(f => dt.items.add(f));
             fileInput.files = dt.files;
@@ -360,20 +384,20 @@
             const imgFiles = files.filter(f => f && f.type && f.type.startsWith('image/'));
 
             if (imgFiles.length === 0) {
-                setHint("Aucun fichier image détecté.");
+                setHint(MSG_NO_IMAGE);
                 return;
             }
 
             const free = MAX_TOTAL - existingCount() - selectedFiles.length;
             if (free <= 0) {
-                setHint("Tu as déjà atteint la limite de 20 photos (existantes + nouvelles).");
+                setHint(MSG_LIMIT_REACHED);
                 return;
             }
 
             let toAdd = imgFiles;
             if (imgFiles.length > free) {
                 toAdd = imgFiles.slice(0, free);
-                setHint(`Limite atteinte : seules ${free} photo(s) ont été ajoutées.`);
+                setHint(formatMsgLimitAddedOnly(free));
             } else {
                 setHint('');
             }
@@ -385,7 +409,6 @@
             renderPreview();
         }
 
-        // Drag UI
         ['dragenter', 'dragover'].forEach(evt => {
             dropzone.addEventListener(evt, e => {
                 e.preventDefault();
@@ -399,23 +422,19 @@
             });
         });
 
-        // Drop files
         dropzone.addEventListener('drop', e => {
             const files = Array.from(e.dataTransfer.files || []);
             addFiles(files);
         });
 
-        // Picker
         fileInput.addEventListener('change', () => {
             const files = Array.from(fileInput.files || []);
             addFiles(files);
 
-            // reset pour permettre re-sélection des mêmes fichiers
             fileInput.value = '';
             syncInputFiles();
         });
 
-        // Init UI
         updateRemainingUI();
     })();
 </script>

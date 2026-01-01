@@ -16,11 +16,20 @@
                      th:src="@{${user.photoUrl}}"
                      th:alt="#{profile.avatar.alt}"
                      class="w-full h-full object-cover"/>
-                <span th:if="${user.photoUrl == null}"
-                      th:text="${user.firstName != null ? user.firstName.substring(0,1) : #{profile.avatar.fallback}}"
+
+                <!-- Première lettre du prénom -->
+                <span th:if="${user.photoUrl == null and user.firstName != null}"
+                      th:text="${user.firstName.substring(0,1)}"
                       class="text-4xl font-bold text-orange-600">
-                </span>
+    </span>
+
+                <!-- Fallback -->
+                <span th:if="${user.photoUrl == null and user.firstName == null}"
+                      th:text="#{profile.avatar.fallback}"
+                      class="text-4xl font-bold text-orange-600">
+    </span>
             </div>
+
 
             <!-- Infos -->
             <div class="mt-4 sm:mt-0">

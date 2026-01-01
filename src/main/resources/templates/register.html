@@ -6,24 +6,38 @@
 
 <div class="max-w-lg mx-auto px-4 py-10">
     <div class="bg-white shadow-xl rounded-2xl overflow-hidden">
+
+        <!-- Header -->
         <div class="bg-gradient-to-r from-green-500 to-blue-600 p-6 text-white">
-            <h1 class="text-2xl font-bold">Créer un compte</h1>
-            <p class="text-sm opacity-80">Rejoins la communauté en quelques secondes</p>
+            <h1 class="text-2xl font-bold"
+                th:text="#{register.title}">
+            </h1>
+            <p class="text-sm opacity-80"
+               th:text="#{register.subtitle}">
+            </p>
         </div>
 
-        <form method="post" th:action="@{/register}" th:object="${register}"
+        <!-- Form -->
+        <form method="post"
+              th:action="@{/register}"
+              th:object="${register}"
               enctype="multipart/form-data"
               class="p-6 space-y-5">
 
-            <!-- Nom & prénom -->
+            <!-- Prénom / Nom -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <label class="block">
-                    <span class="text-sm font-semibold text-gray-700">Prénom</span>
+                    <span class="text-sm font-semibold text-gray-700"
+                          th:text="#{register.firstname}">
+                    </span>
                     <input type="text" th:field="*{firstName}" required
                            class="mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"/>
                 </label>
+
                 <label class="block">
-                    <span class="text-sm font-semibold text-gray-700">Nom</span>
+                    <span class="text-sm font-semibold text-gray-700"
+                          th:text="#{register.lastname}">
+                    </span>
                     <input type="text" th:field="*{lastName}" required
                            class="mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"/>
                 </label>
@@ -31,43 +45,103 @@
 
             <!-- Email -->
             <label class="block">
-                <span class="text-sm font-semibold text-gray-700">Email</span>
+                <span class="text-sm font-semibold text-gray-700"
+                      th:text="#{register.email}">
+                </span>
                 <input type="email" th:field="*{email}" required
                        class="mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"/>
             </label>
 
             <!-- Téléphone -->
             <label class="block">
-                <span class="text-sm font-semibold text-gray-700">Téléphone</span>
-                <input type="tel" th:field="*{phone}" placeholder="+41 79 123 45 67"
+                <span class="text-sm font-semibold text-gray-700"
+                      th:text="#{register.phone}">
+                </span>
+                <input type="tel"
+                       th:field="*{phone}"
+                       th:placeholder="#{register.phone.placeholder}"
                        class="mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"/>
             </label>
 
             <!-- Mot de passe -->
             <label class="block">
-                <span class="text-sm font-semibold text-gray-700">Mot de passe</span>
-                <input type="password" th:field="*{password}" minlength="6" required
+                <span class="text-sm font-semibold text-gray-700"
+                      th:text="#{register.password}">
+                </span>
+                <input type="password"
+                       th:field="*{password}"
+                       minlength="6"
+                       required
                        class="mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"/>
             </label>
 
-            <!-- Photo de profil -->
+            <!-- Photo -->
             <label class="block">
-                <span class="text-sm font-semibold text-gray-700">Photo de profil</span>
-                <input type="file" id="photoInput" accept="image/*"
-                       class="mt-1 w-full p-2 border rounded-lg"/>
-                <div id="photoPreview" class="mt-3 hidden">
-                    <img class="w-20 h-20 rounded-full object-cover border"/>
+    <span class="text-sm font-semibold text-gray-700"
+          th:text="#{register.photo}">
+    </span>
+
+                <!-- Zone upload -->
+                <div class="mt-2 flex items-center justify-center
+                w-full p-6 border-2 border-dashed border-gray-300
+                rounded-xl cursor-pointer
+                bg-gray-50 hover:bg-gray-100
+                transition group"
+                     onclick="document.getElementById('photoInput').click()">
+
+                    <div class="text-center">
+                        <!-- Icône -->
+                        <svg class="mx-auto h-10 w-10 text-gray-400 group-hover:text-blue-500 transition"
+                             fill="none" stroke="currentColor" stroke-width="2"
+                             viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M7 16V4a1 1 0 011-1h8a1 1 0 011 1v12m-5-4l-3 3m0 0l3 3m-3-3h8"/>
+                        </svg>
+
+                        <p class="mt-2 text-sm text-gray-600"
+                           th:text="#{register.photo.hint}">
+                        </p>
+
+                        <p class="mt-1 text-xs text-gray-400"
+                           th:text="#{register.photo.formats}">
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Input réel (caché) -->
+                <input type="file"
+                       id="photoInput"
+                       accept="image/*"
+                       class="hidden"/>
+
+                <!-- Preview -->
+                <div id="photoPreview" class="mt-4 hidden flex items-center gap-4">
+                    <img class="w-20 h-20 rounded-full object-cover border shadow"/>
+                    <button type="button"
+                            onclick="removePhotoPreview()"
+                            class="text-sm text-red-600 hover:underline"
+                            th:text="#{register.photo.remove}">
+                    </button>
                 </div>
             </label>
 
+
             <!-- Messages -->
-            <p th:if="${error}" th:text="${error}" class="text-red-600 text-sm"></p>
-            <p th:if="${message}" th:text="${message}" class="text-green-600 text-sm"></p>
+            <p th:if="${error}"
+               th:text="${error}"
+               class="text-red-600 text-sm">
+            </p>
+
+            <p th:if="${message}"
+               th:text="${message}"
+               class="text-green-600 text-sm">
+            </p>
 
             <!-- Submit -->
             <button type="submit"
-                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg shadow-lg transition">
-                Créer mon compte
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white
+                           font-semibold py-3 rounded-lg shadow-lg transition"
+                    th:text="#{register.submit}">
             </button>
         </form>
     </div>
@@ -86,6 +160,17 @@
             preview.classList.remove('hidden');
         }
     });
+</script>
+<script>
+    function removePhotoPreview() {
+        const input = document.getElementById('photoInput');
+        const preview = document.getElementById('photoPreview');
+        const img = preview.querySelector('img');
+
+        input.value = '';
+        img.src = '';
+        preview.classList.add('hidden');
+    }
 </script>
 
 </body>

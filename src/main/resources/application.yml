@@ -1,6 +1,13 @@
 server:
   address: 0.0.0.0
   port: 8080
+  servlet:
+    session:
+      timeout: 0
+      cookie:
+        name: NONE
+        http-only: true
+        secure: true
 
 spring:
   web:

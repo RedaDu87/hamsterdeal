@@ -1,20 +1,15 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="fr"
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="fr"
       th:replace="~{fragments/_layout :: base(~{::body})}">
-<head>
-    <meta charset="UTF-8">
-    <title th:text="${ad.title}">Détail annonce</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.2/dist/tailwind.min.css" rel="stylesheet">
-</head>
-
 <body class="bg-gray-50 text-gray-800 overflow-x-hidden">
 
 <!-- 🔙 RETOUR HAUT -->
 <div class="container mx-auto mt-4 px-4">
     <button onclick="window.history.back()"
             class="w-full sm:w-auto flex justify-center items-center
-                   bg-gray-200 hover:bg-gray-300 px-4 py-3 rounded-lg shadow font-semibold">
-        ← Retour aux annonces
+                   bg-gray-200 hover:bg-gray-300 px-4 py-3 rounded-lg shadow font-semibold"
+            th:text="#{ad.back}">
     </button>
 </div>
 
@@ -23,12 +18,11 @@
 
     <article th:if="${ad != null}"
              class="bg-white rounded-3xl shadow-xl mt-4 p-4 sm:p-6 lg:p-8
-                grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+                    grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
 
-        <!-- 🖼️ GALERIE (1/3) -->
+        <!-- 🖼️ GALERIE -->
         <section class="lg:col-span-1">
 
-            <!-- IMAGE PRINCIPALE -->
             <div class="relative rounded-2xl overflow-hidden shadow">
                 <img id="mainImage"
                      th:src="${ad.images[0].url}"
@@ -37,8 +31,9 @@
                      onclick="openCarousel()">
 
                 <span class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-3 py-1 rounded-full">
-                <span id="totalPhotos" th:text="${#lists.size(ad.images)}"></span> photos
-            </span>
+                    <span id="totalPhotos" th:text="${#lists.size(ad.images)}"></span>
+                    <span th:text="#{ad.photos}"></span>
+                </span>
             </div>
 
             <!-- MINIATURES -->
@@ -46,29 +41,34 @@
                 <div th:each="img,iter : ${ad.images}" class="shrink-0">
                     <img th:src="${img.url}"
                          th:alt="${img.alt}"
-                         class="thumbnail w-20 h-20 sm:w-24 sm:h-24 aspect-square
-                            object-cover rounded-xl cursor-pointer
-                            ring-2 ring-transparent
-                            hover:ring-green-500 transition"
+                         class="thumbnail w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-xl
+                                cursor-pointer ring-2 ring-transparent
+                                hover:ring-green-500 transition"
                          th:data-index="${iter.index}"
                          onclick="selectThumbnail(this)">
                 </div>
             </div>
         </section>
 
-        <!-- 🧾 INFOS (2/3) -->
+        <!-- 🧾 INFOS -->
         <section class="lg:col-span-2 flex flex-col gap-6">
 
             <header>
                 <h1 class="text-2xl sm:text-3xl font-extrabold"
-                    th:text="${ad.title}"></h1>
+                    th:text="${ad.title}">
+                </h1>
+
                 <p class="text-3xl sm:text-4xl font-extrabold text-green-600"
-                   th:text="${#numbers.formatDecimal(ad.price,0,'COMMA',2,'POINT')} + ' CHF'"></p>
+                   th:text="${#numbers.formatDecimal(ad.price,0,'COMMA',2,'POINT')} + ' CHF'">
+                </p>
             </header>
 
             <!-- VENDEUR -->
             <div th:if="${owner != null}" class="bg-gray-50 rounded-2xl p-4 shadow-sm">
-                <h2 class="font-semibold text-lg mb-3">Vendeur</h2>
+                <h2 class="font-semibold text-lg mb-3"
+                    th:text="#{ad.seller}">
+                </h2>
+
                 <div class="flex gap-4 items-start">
                     <img th:if="${owner.photoUrl != null}"
                          th:src="${owner.photoUrl}"
@@ -76,28 +76,65 @@
 
                     <div class="text-sm space-y-1 break-all">
                         <p class="font-semibold"
-                           th:text="${owner.firstName + ' ' + owner.lastName}"></p>
-                        <p>📧 <a class="underline" th:href="'mailto:' + ${owner.email}" th:text="${owner.email}"></a></p>
-                        <p>📞 <a class="underline" th:href="'tel:' + ${owner.phone}" th:text="${owner.phone}"></a></p>
+                           th:text="${owner.firstName + ' ' + owner.lastName}">
+                        </p>
+
+                        <p>
+                            <span th:text="#{ad.email}"></span>
+                            <a class="underline"
+                               th:href="'mailto:' + ${owner.email}"
+                               th:text="${owner.email}">
+                            </a>
+                        </p>
+
+                        <p>
+                            <span th:text="#{ad.phone}"></span>
+                            <a class="underline"
+                               th:href="'tel:' + ${owner.phone}"
+                               th:text="${owner.phone}">
+                            </a>
+                        </p>
                     </div>
                 </div>
             </div>
 
             <!-- DESCRIPTION -->
             <section>
-                <h2 class="font-semibold text-lg mb-2">Description</h2>
+                <h2 class="font-semibold text-lg mb-2"
+                    th:text="#{ad.description.title}">
+                </h2>
+
                 <p class="text-gray-700 leading-relaxed"
-                   th:text="${ad.description}"></p>
+                   th:text="${ad.description}">
+                </p>
             </section>
 
             <!-- DÉTAILS -->
             <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
-                <div class="bg-gray-50 p-3 rounded-xl">📂 <span th:text="${ad.category}"></span></div>
-                <div class="bg-gray-50 p-3 rounded-xl">✨ <span th:text="${ad.condition}"></span></div>
-                <div class="bg-gray-50 p-3 rounded-xl">🏷️ <span th:text="${ad.brand}"></span></div>
-                <div class="bg-gray-50 p-3 rounded-xl">🎨 <span th:text="${ad.color}"></span></div>
-                <div class="bg-gray-50 p-3 rounded-xl">📍 <span th:text="${ad.canton}"></span></div>
-                <div class="bg-gray-50 p-3 rounded-xl">🏙️ <span th:text="${ad.city}"></span></div>
+                <div class="bg-gray-50 p-3 rounded-xl">
+                    <span th:text="#{ad.category}"></span> :
+                    <span th:text="${ad.category}"></span>
+                </div>
+                <div class="bg-gray-50 p-3 rounded-xl">
+                    <span th:text="#{ad.condition}"></span> :
+                    <span th:text="${ad.condition}"></span>
+                </div>
+                <div class="bg-gray-50 p-3 rounded-xl">
+                    <span th:text="#{ad.brand}"></span> :
+                    <span th:text="${ad.brand}"></span>
+                </div>
+                <div class="bg-gray-50 p-3 rounded-xl">
+                    <span th:text="#{ad.color}"></span> :
+                    <span th:text="${ad.color}"></span>
+                </div>
+                <div class="bg-gray-50 p-3 rounded-xl">
+                    <span th:text="#{ad.canton}"></span> :
+                    <span th:text="${ad.canton}"></span>
+                </div>
+                <div class="bg-gray-50 p-3 rounded-xl">
+                    <span th:text="#{ad.city}"></span> :
+                    <span th:text="${ad.city}"></span>
+                </div>
             </section>
         </section>
     </article>
@@ -106,16 +143,24 @@
 <!-- 🔙 RETOUR BAS -->
 <div class="container mx-auto mt-6 mb-10 px-4">
     <button onclick="window.history.back()"
-            class="w-full bg-gray-200 hover:bg-gray-300 px-4 py-4 rounded-xl shadow font-semibold">
-        ← Retour aux annonces
+            class="w-full bg-gray-200 hover:bg-gray-300 px-4 py-4 rounded-xl shadow font-semibold"
+            th:text="#{ad.back}">
     </button>
 </div>
 
 <!-- 🖼️ CARROUSEL -->
 <div id="carousel" class="fixed inset-0 bg-black/90 hidden z-50 flex items-center justify-center">
-    <button onclick="closeCarousel()" class="absolute top-6 right-6 text-white text-4xl">✕</button>
-    <button onclick="prevImage()" class="absolute left-6 text-white text-3xl">◀</button>
-    <button onclick="nextImage()" class="absolute right-6 text-white text-3xl">▶</button>
+    <button onclick="closeCarousel()" class="absolute top-6 right-6 text-white text-4xl"
+            th:text="#{ad.close}">
+    </button>
+
+    <button onclick="prevImage()" class="absolute left-6 text-white text-3xl"
+            th:text="#{ad.prev}">
+    </button>
+
+    <button onclick="nextImage()" class="absolute right-6 text-white text-3xl"
+            th:text="#{ad.next}">
+    </button>
 
     <div class="absolute bottom-6 text-white text-sm">
         <span id="carouselIndex"></span> /
@@ -127,12 +172,16 @@
 </div>
 
 <script th:inline="javascript">
+    /*<![CDATA[*/
     const images = [
         /*[# th:each="img : ${ad.images}"]*/
         { src: /*[[${img.url}]]*/ },
         /*[/]*/
     ];
+    /*]]>*/
+</script>
 
+<script>
     let currentIndex = 0;
 
     const mainImage = document.getElementById('mainImage');
@@ -143,13 +192,7 @@
 
     function selectThumbnail(el) {
         currentIndex = parseInt(el.dataset.index);
-        mainImage.src = images[currentIndex].src;
-        updateThumbnailState();
-    }
-
-    function updateThumbnailState() {
-        thumbnails.forEach(t => t.classList.remove('ring-green-500'));
-        thumbnails[currentIndex]?.classList.add('ring-green-500');
+        updateAll();
     }
 
     function openCarousel() {
@@ -180,6 +223,11 @@
     function updateCarousel() {
         carouselImage.src = images[currentIndex].src;
         carouselIndex.textContent = currentIndex + 1;
+    }
+
+    function updateThumbnailState() {
+        thumbnails.forEach(t => t.classList.remove('ring-green-500'));
+        thumbnails[currentIndex]?.classList.add('ring-green-500');
     }
 
     updateThumbnailState();

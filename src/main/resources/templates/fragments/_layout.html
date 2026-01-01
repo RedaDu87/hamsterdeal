@@ -48,11 +48,18 @@
                th:text="#{nav.browse}">browse</a>
 
             <!-- CTA publier -->
+            <div sec:authorize="isAuthenticated()" class="flex items-center gap-3">
             <a th:href="@{/ad/new}"
                class="bg-gradient-to-r from-primary to-green-600 text-white px-4 py-1.5 rounded-md shadow hover:scale-105 transition"
                th:text="#{nav.publish}">
             </a>
-
+            </div>
+            <div sec:authorize="!isAuthenticated()" class="flex items-center gap-3">
+                <a th:href="@{/login}"
+                   class="bg-gradient-to-r from-primary to-green-600 text-white px-4 py-1.5 rounded-md shadow hover:scale-105 transition"
+                   th:text="#{nav.publish}">
+                </a>
+            </div>
             <!-- LANG SWITCH (public) -->
             <div class="relative">
                 <!-- TRIGGER -->
@@ -134,11 +141,18 @@
                th:text="#{nav.browse}">
             </a>
 
+            <div sec:authorize="isAuthenticated()" class="flex items-center gap-3">
             <a th:href="@{/ad/new}"
                class="text-center bg-gradient-to-r from-primary to-green-600 text-white px-4 py-2 rounded-md shadow"
                th:text="#{nav.publish}">
             </a>
-
+            </div>
+            <div sec:authorize="!isAuthenticated()" class="flex items-center gap-3">
+                <a th:href="@{/login}"
+                   class="text-center bg-gradient-to-r from-primary to-green-600 text-white px-4 py-2 rounded-md shadow"
+                   th:text="#{nav.publish}">
+                </a>
+            </div>
             <!-- LANG MOBILE -->
             <div class="flex justify-center gap-4 pt-2 border-t">
                 <a th:href="@{?(lang='fr')}">🇫🇷</a>
@@ -193,8 +207,12 @@
             <ul class="space-y-1">
                 <li><a th:href="@{/}" class="hover:text-white" th:text="#{nav.home}"></a></li>
                 <li><a th:href="@{/ads}" class="hover:text-white" th:text="#{nav.browse}"></a></li>
+                <div sec:authorize="isAuthenticated()" class="flex items-center gap-3">
                 <li><a th:href="@{/ad/new}" class="hover:text-white" th:text="#{nav.publish}"></a></li>
-
+                </div>
+                <div sec:authorize="!isAuthenticated()" class="flex items-center gap-3">
+                    <li><a th:href="@{/login}" class="hover:text-white" th:text="#{nav.publish}"></a></li>
+                </div>
                 <!-- 🎮 JEU -->
                 <li>
                     <a th:href="@{/hamster-game}"

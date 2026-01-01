@@ -20,7 +20,12 @@
 </head>
 
 <body class="bg-gray-50">
-
+<div class="container mx-auto mt-4 px-4">
+    <button onclick="window.history.back()"
+            class="w-full bg-gray-200 hover:bg-gray-300 px-4 py-4 rounded-xl shadow font-semibold"
+            th:text="#{ad.back}">
+    </button>
+</div>
 <div class="max-w-5xl mx-auto px-4 md:px-6 py-8">
     <div class="bg-white/80 backdrop-blur rounded-2xl shadow-lg overflow-hidden">
 
@@ -438,6 +443,11 @@
         updateRemainingUI();
     })();
 </script>
-
+<div class="container mx-auto mt-4 px-4">
+    <button onclick="window.history.back()"
+            class="w-full bg-gray-200 hover:bg-gray-300 px-4 py-4 rounded-xl shadow font-semibold"
+            th:text="#{ad.back}">
+    </button>
+</div>
 </body>
 </html>

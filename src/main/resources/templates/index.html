@@ -16,8 +16,8 @@
         ======================= -->
         <div>
 
-            <h2 class="text-3xl font-extrabold text-gray-800 mb-6">
-                Catégories
+            <h2 class="text-3xl font-extrabold text-gray-800 mb-6"
+                th:text="#{categories.title}">
             </h2>
 
             <div class="flex flex-wrap gap-6">
@@ -32,7 +32,7 @@
                             <circle cx="17" cy="17" r="2"/>
                         </svg>
                     </div>
-                    <span class="text-xs font-semibold">Voitures</span>
+                    <span class="text-xs font-semibold" th:text="#{category.car}"></span>
                 </a>
 
                 <!-- Électronique -->
@@ -44,7 +44,7 @@
                                   stroke="currentColor" stroke-width="1.5" fill="none"/>
                         </svg>
                     </div>
-                    <span class="text-xs font-semibold">Électronique</span>
+                    <span class="text-xs font-semibold" th:text="#{category.electronics}"></span>
                 </a>
 
                 <!-- Maison -->
@@ -54,7 +54,7 @@
                             <path d="M3 11l9-7 9 7v8a2 2 0 0 1-2 2h-4v-6H9v6H5a2 2 0 0 1-2-2v-8z" fill="currentColor"/>
                         </svg>
                     </div>
-                    <span class="text-xs font-semibold">Maison</span>
+                    <span class="text-xs font-semibold" th:text="#{category.home}"></span>
                 </a>
 
                 <!-- Mode -->
@@ -64,7 +64,7 @@
                             <path d="M8 6l4-2 4 2 2 6-6 8-6-8 2-6z" fill="currentColor"/>
                         </svg>
                     </div>
-                    <span class="text-xs font-semibold">Mode</span>
+                    <span class="text-xs font-semibold" th:text="#{category.fashion}"></span>
                 </a>
 
                 <!-- Sport -->
@@ -75,7 +75,7 @@
                             <path d="M3 12h18M12 3v18M5 5l14 14" stroke="currentColor" stroke-width="1.5"/>
                         </svg>
                     </div>
-                    <span class="text-xs font-semibold">Sport</span>
+                    <span class="text-xs font-semibold" th:text="#{category.sports}"></span>
                 </a>
 
                 <!-- Jouets -->
@@ -87,7 +87,7 @@
                             <rect x="6" y="12" width="12" height="7" rx="2"/>
                         </svg>
                     </div>
-                    <span class="text-xs font-semibold">Jouets</span>
+                    <span class="text-xs font-semibold" th:text="#{category.toys}"></span>
                 </a>
 
                 <!-- Livres -->
@@ -98,7 +98,7 @@
                             <path d="M9 4h8a3 3 0 0 1 3 3v13h-8" stroke="currentColor" stroke-width="1.5" fill="none"/>
                         </svg>
                     </div>
-                    <span class="text-xs font-semibold">Livres</span>
+                    <span class="text-xs font-semibold" th:text="#{category.books}"></span>
                 </a>
 
                 <!-- Musique -->
@@ -108,7 +108,7 @@
                             <path d="M14 3v10.5a3.5 3.5 0 1 1-1.5-2.9V6l7-2v7.5a3.5 3.5 0 1 1-1.5-2.9V3l-4 1z" fill="currentColor"/>
                         </svg>
                     </div>
-                    <span class="text-xs font-semibold">Musique</span>
+                    <span class="text-xs font-semibold" th:text="#{category.music}"></span>
                 </a>
 
                 <!-- Jeux vidéo -->
@@ -122,7 +122,7 @@
                             <circle cx="14.5" cy="13" r="1.25" fill="#fff"/>
                         </svg>
                     </div>
-                    <span class="text-xs font-semibold">Jeux vidéo</span>
+                    <span class="text-xs font-semibold" th:text="#{category.gaming}"></span>
                 </a>
 
                 <!-- Outils -->
@@ -132,7 +132,7 @@
                             <path d="M14 3l7 7-4 4-7-7-3 3-4-4 3-3 4 4z" fill="currentColor"/>
                         </svg>
                     </div>
-                    <span class="text-xs font-semibold">Outils</span>
+                    <span class="text-xs font-semibold" th:text="#{category.tools}"></span>
                 </a>
 
                 <!-- Jardin -->
@@ -142,7 +142,7 @@
                             <path d="M12 2a7 7 0 0 0 0 14 7 7 0 0 0 0-14zm0 14v6" stroke="currentColor" stroke-width="1.5" fill="none"/>
                         </svg>
                     </div>
-                    <span class="text-xs font-semibold">Jardin</span>
+                    <span class="text-xs font-semibold" th:text="#{category.garden}"></span>
                 </a>
 
                 <!-- Animaux -->
@@ -154,7 +154,7 @@
                             <path d="M12 14a6 6 0 0 0-6 6h12a6 6 0 0 0-6-6z" fill="currentColor"/>
                         </svg>
                     </div>
-                    <span class="text-xs font-semibold">Animaux</span>
+                    <span class="text-xs font-semibold" th:text="#{category.pets}"></span>
                 </a>
 
                 <!-- Meubles -->
@@ -165,7 +165,7 @@
                             <path d="M4 8V6h16v2M4 16v2m16-2v2" stroke="currentColor" stroke-width="1.5"/>
                         </svg>
                     </div>
-                    <span class="text-xs font-semibold">Meubles</span>
+                    <span class="text-xs font-semibold" th:text="#{category.furniture}"></span>
                 </a>
 
                 <!-- Art -->
@@ -175,7 +175,7 @@
                             <path d="M4 20h16v-2H4v2zm2-4h12l-6-12-6 12z" fill="currentColor"/>
                         </svg>
                     </div>
-                    <span class="text-xs font-semibold">Art</span>
+                    <span class="text-xs font-semibold" th:text="#{category.art}"></span>
                 </a>
 
                 <!-- Collections -->
@@ -187,7 +187,7 @@
                             <rect x="8" y="9" width="8" height="6"/>
                         </svg>
                     </div>
-                    <span class="text-xs font-semibold">Collections</span>
+                    <span class="text-xs font-semibold" th:text="#{category.collectibles}"></span>
                 </a>
 
                 <!-- Immobilier -->
@@ -197,7 +197,7 @@
                             <path d="M3 10l9-7 9 7v10a2 2 0 0 1-2 2h-4v-6H9v6H5a2 2 0 0 1-2-2V10z" fill="currentColor"/>
                         </svg>
                     </div>
-                    <span class="text-xs font-semibold">Immobilier</span>
+                    <span class="text-xs font-semibold" th:text="#{category.realestate}"></span>
                 </a>
 
                 <!-- Services -->
@@ -208,7 +208,7 @@
                             <path d="M12 6v6l4 2" stroke="#fff" stroke-width="1.5" fill="none"/>
                         </svg>
                     </div>
-                    <span class="text-xs font-semibold">Services</span>
+                    <span class="text-xs font-semibold" th:text="#{category.services}"></span>
                 </a>
 
                 <!-- Autre -->
@@ -220,13 +220,13 @@
                             <circle cx="12" cy="16" r="1" fill="#fff"/>
                         </svg>
                     </div>
-                    <span class="text-xs font-semibold">Autre</span>
+                    <span class="text-xs font-semibold" th:text="#{category.other}"></span>
                 </a>
 
                 <!-- Bouton toutes catégories -->
                 <button id="openCategoriesBtn"
-                        class="px-4 py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white font-semibold shadow hover:shadow-lg transition">
-                    Voir toutes
+                        class="px-4 py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white font-semibold shadow hover:shadow-lg transition"
+                        th:text="#{categories.showAll}">
                 </button>
 
             </div>
@@ -354,7 +354,7 @@
 
     <!-- HEADER -->
     <div class="flex justify-between items-center p-4 border-b bg-gray-50">
-        <h3 class="text-lg font-bold text-gray-700">Toutes les catégories</h3>
+        <h3 class="text-lg font-bold text-gray-700" th:text="#{categories.all}"></h3>
         <button id="closeCategoriesBtn" class="text-gray-500 hover:text-red-500 text-3xl">&times;</button>
     </div>
 
@@ -370,7 +370,7 @@
                     <circle cx="17" cy="17" r="2"/>
                 </svg>
             </div>
-            <span class="text-xs font-semibold">Voitures</span>
+            <span class="text-xs font-semibold" th:text="#{category.car}"></span>
         </a>
 
         <!-- Électronique -->
@@ -382,7 +382,7 @@
                           stroke="currentColor" stroke-width="1.5" fill="none"/>
                 </svg>
             </div>
-            <span class="text-xs font-semibold">Électronique</span>
+            <span class="text-xs font-semibold" th:text="#{category.electronics}"></span>
         </a>
 
         <!-- Maison -->
@@ -392,7 +392,7 @@
                     <path d="M3 11l9-7 9 7v8a2 2 0 0 1-2 2h-4v-6H9v6H5a2 2 0 0 1-2-2v-8z" fill="currentColor"/>
                 </svg>
             </div>
-            <span class="text-xs font-semibold">Maison</span>
+            <span class="text-xs font-semibold" th:text="#{category.home}"></span>
         </a>
 
         <!-- Mode -->
@@ -402,7 +402,7 @@
                     <path d="M8 6l4-2 4 2 2 6-6 8-6-8 2-6z" fill="currentColor"/>
                 </svg>
             </div>
-            <span class="text-xs font-semibold">Mode</span>
+            <span class="text-xs font-semibold" th:text="#{category.fashion}"></span>
         </a>
 
         <!-- Sport -->
@@ -413,7 +413,7 @@
                     <path d="M3 12h18M12 3v18M5 5l14 14" stroke="currentColor" stroke-width="1.5"/>
                 </svg>
             </div>
-            <span class="text-xs font-semibold">Sport</span>
+            <span class="text-xs font-semibold" th:text="#{category.sports}"></span>
         </a>
 
         <!-- Jouets -->
@@ -425,7 +425,7 @@
                     <rect x="6" y="12" width="12" height="7" rx="2"/>
                 </svg>
             </div>
-            <span class="text-xs font-semibold">Jouets</span>
+            <span class="text-xs font-semibold" th:text="#{category.toys}"></span>
         </a>
 
         <!-- Livres -->
@@ -436,7 +436,7 @@
                     <path d="M9 4h8a3 3 0 0 1 3 3v13h-8" stroke="currentColor" stroke-width="1.5" fill="none"/>
                 </svg>
             </div>
-            <span class="text-xs font-semibold">Livres</span>
+            <span class="text-xs font-semibold" th:text="#{category.books}"></span>
         </a>
 
         <!-- Musique -->
@@ -446,7 +446,7 @@
                     <path d="M14 3v10.5a3.5 3.5 0 1 1-1.5-2.9V6l7-2v7.5a3.5 3.5 0 1 1-1.5-2.9V3l-4 1z" fill="currentColor"/>
                 </svg>
             </div>
-            <span class="text-xs font-semibold">Musique</span>
+            <span class="text-xs font-semibold" th:text="#{category.music}"></span>
         </a>
 
         <!-- Jeux vidéo -->
@@ -460,7 +460,7 @@
                     <circle cx="14.5" cy="13" r="1.25" fill="#fff"/>
                 </svg>
             </div>
-            <span class="text-xs font-semibold">Jeux vidéo</span>
+            <span class="text-xs font-semibold" th:text="#{category.gaming}"></span>
         </a>
 
         <!-- Outils -->
@@ -470,7 +470,7 @@
                     <path d="M14 3l7 7-4 4-7-7-3 3-4-4 3-3 4 4z" fill="currentColor"/>
                 </svg>
             </div>
-            <span class="text-xs font-semibold">Outils</span>
+            <span class="text-xs font-semibold" th:text="#{category.tools}"></span>
         </a>
 
         <!-- Jardin -->
@@ -480,7 +480,7 @@
                     <path d="M12 2a7 7 0 0 0 0 14 7 7 0 0 0 0-14zm0 14v6" stroke="currentColor" stroke-width="1.5" fill="none"/>
                 </svg>
             </div>
-            <span class="text-xs font-semibold">Jardin</span>
+            <span class="text-xs font-semibold" th:text="#{category.garden}"></span>
         </a>
 
         <!-- Animaux -->
@@ -492,7 +492,7 @@
                     <path d="M12 14a6 6 0 0 0-6 6h12a6 6 0 0 0-6-6z" fill="currentColor"/>
                 </svg>
             </div>
-            <span class="text-xs font-semibold">Animaux</span>
+            <span class="text-xs font-semibold" th:text="#{category.pets}"></span>
         </a>
 
         <!-- Meubles -->
@@ -503,7 +503,7 @@
                     <path d="M4 8V6h16v2M4 16v2m16-2v2" stroke="currentColor" stroke-width="1.5"/>
                 </svg>
             </div>
-            <span class="text-xs font-semibold">Meubles</span>
+            <span class="text-xs font-semibold" th:text="#{category.furniture}"></span>
         </a>
 
         <!-- Art -->
@@ -513,7 +513,7 @@
                     <path d="M4 20h16v-2H4v2zm2-4h12l-6-12-6 12z" fill="currentColor"/>
                 </svg>
             </div>
-            <span class="text-xs font-semibold">Art</span>
+            <span class="text-xs font-semibold" th:text="#{category.art}"></span>
         </a>
 
         <!-- Collections -->
@@ -525,7 +525,7 @@
                     <rect x="8" y="9" width="8" height="6"/>
                 </svg>
             </div>
-            <span class="text-xs font-semibold">Collections</span>
+            <span class="text-xs font-semibold" th:text="#{category.collectibles}"></span>
         </a>
 
         <!-- Immobilier -->
@@ -535,7 +535,7 @@
                     <path d="M3 10l9-7 9 7v10a2 2 0 0 1-2 2h-4v-6H9v6H5a2 2 0 0 1-2-2V10z" fill="currentColor"/>
                 </svg>
             </div>
-            <span class="text-xs font-semibold">Immobilier</span>
+            <span class="text-xs font-semibold" th:text="#{category.realestate}"></span>
         </a>
 
         <!-- Services -->
@@ -543,10 +543,10 @@
             <div class="w-12 h-12 rounded-full bg-white shadow flex items-center justify-center group-hover:shadow-lg transition">
                 <svg viewBox="0 0 24 24" class="w-6 h-6 text-green-600">
                     <circle cx="12" cy="12" r="9" fill="currentColor"/>
-                    <path d="M12 6v6l4 2" stroke="#fff" stroke-width="1.5"/>
+                    <path d="M12 6v6l4 2" stroke="#fff" stroke-width="1.5" fill="none"/>
                 </svg>
             </div>
-            <span class="text-xs font-semibold">Services</span>
+            <span class="text-xs font-semibold" th:text="#{category.services}"></span>
         </a>
 
         <!-- Autre -->
@@ -558,7 +558,7 @@
                     <circle cx="12" cy="16" r="1" fill="#fff"/>
                 </svg>
             </div>
-            <span class="text-xs font-semibold">Autre</span>
+            <span class="text-xs font-semibold" th:text="#{category.other}"></span>
         </a>
 
     </div>
@@ -572,7 +572,9 @@
 =========================== -->
 <section class="py-12">
     <div class="max-w-7xl mx-auto px-4">
-        <h2 class="text-3xl font-extrabold text-gray-800 mb-6">Dernières annonces</h2>
+        <h2 class="text-3xl font-extrabold text-gray-800 mb-6"
+            th:text="#{ads.latest}">
+        </h2>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 

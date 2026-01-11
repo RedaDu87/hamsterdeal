@@ -24,16 +24,12 @@ spring:
     encoding: utf-8
     fallback-to-system-locale: false
   mail:
-    host: localhost
+    host: 135.125.181.40
     port: 25
-    username: ""
-    password: ""
+    protocol: smtp
     properties:
-      mail:
-        smtp:
-          auth: false
-          starttls:
-            enable: false
+      mail.smtp.auth: false
+      mail.smtp.starttls.enable: false
 
 app:
   jwt:

@@ -1,6 +1,7 @@
 package com.example.annonces.mapper;
 
 import com.example.annonces.domain.Ad;
+import com.example.annonces.domain.ElectronicsType;
 import com.example.annonces.dto.AdRequest;
 
 public final class AdMapper {
@@ -20,6 +21,7 @@ public final class AdMapper {
         ad.setCondition(req.getCondition());
         ad.setBrand(req.getBrand());
         ad.setColor(req.getColor());
+        ad.setNpa(req.getNpa());
         ad.setCity(req.getCity());
 
         // Car
@@ -42,18 +44,17 @@ public final class AdMapper {
         }
 
         // Electronics
-        if (req.getElectronics()!=null){
+// Electronics
+        if (req.getElectronics() != null) {
             Ad.ElectronicsAttrs a = new Ad.ElectronicsAttrs();
             var d = req.getElectronics();
-            a.setType(d.getType());
+
+            a.setType(ElectronicsType.from(d.getType()));
             a.setModel(d.getModel());
-            a.setStorageGb(d.getStorageGb());
-            a.setRamGb(d.getRamGb());
-            a.setCpu(d.getCpu());
-            a.setScreen(d.getScreen());
-            a.setOs(d.getOs());
+
             ad.setElectronics(a);
         }
+
 
         // Home
         if (req.getHome()!=null){
@@ -223,6 +224,7 @@ public final class AdMapper {
         req.setCondition(ad.getCondition());
         req.setBrand(ad.getBrand());
         req.setColor(ad.getColor());
+        req.setNpa(ad.getNpa());
         req.setCity(ad.getCity());
 
         // Car
@@ -244,19 +246,18 @@ public final class AdMapper {
             req.setCar(d);
         }
 
-        // Electronics
-        if (ad.getElectronics()!=null){
+
+// Electronics
+        if (ad.getElectronics() != null) {
             var a = ad.getElectronics();
             var d = new AdRequest.ElectronicsDTO();
-            d.setType(a.getType());
+
+            d.setType(a.getType() != null ? a.getType().name().toLowerCase() : null);
             d.setModel(a.getModel());
-            d.setStorageGb(a.getStorageGb());
-            d.setRamGb(a.getRamGb());
-            d.setCpu(a.getCpu());
-            d.setScreen(a.getScreen());
-            d.setOs(a.getOs());
+
             req.setElectronics(d);
         }
+
 
         // Home
         if (ad.getHome()!=null){

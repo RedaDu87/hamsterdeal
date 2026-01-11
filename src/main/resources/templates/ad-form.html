@@ -103,31 +103,94 @@
                 </label>
             </section>
 
+            <!-- ================= ÉLECTRONIQUE ================= -->
+            <section id="electronicsSection"
+                     class="space-y-6 border-t pt-6 hidden">
+
+                <h2 class="text-lg font-semibold text-gray-800">
+                    Informations électroniques
+                </h2>
+
+                <section class="grid gap-6 md:grid-cols-2">
+
+                    <!-- Type (ENUM) -->
+                    <label class="block">
+            <span class="font-semibold text-sm text-gray-700">
+                Type d’appareil
+            </span>
+
+                        <select th:field="*{electronics.type}"
+                                class="mt-1 w-full p-3 rounded-lg border border-gray-300 bg-white
+                           focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+
+                            <option value="">Choisir…</option>
+
+                            <option th:each="t : ${electronicsTypes}"
+                                    th:value="${t.name()}"
+                                    th:text="${#strings.capitalize(t.name().toLowerCase())}">
+                            </option>
+                        </select>
+                    </label>
+
+                    <!-- Modèle -->
+                    <label class="block">
+            <span class="font-semibold text-sm text-gray-700">
+                Modèle
+            </span>
+
+                        <input type="text"
+                               th:field="*{electronics.model}"
+                               placeholder="iPhone 14, Galaxy S23, MacBook Pro…"
+                               class="mt-1 w-full p-3 rounded-lg border border-gray-300
+                          focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"/>
+                    </label>
+
+                </section>
+            </section>
+
+
             <!-- Localisation -->
             <section class="grid gap-6 md:grid-cols-2">
-                <label class="block">
-                    <span class="font-semibold text-sm text-gray-700" th:text="#{ad.form.field.canton}">Canton</span>
-                    <select th:field="*{canton}" required
-                            class="mt-1 w-full p-3 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
-                        <option value="" th:text="#{ad.form.canton.none}">—</option>
-                        <option value="AG">AG</option><option value="AI">AI</option><option value="AR">AR</option>
-                        <option value="BE">BE</option><option value="BL">BL</option><option value="BS">BS</option>
-                        <option value="FR">FR</option><option value="GE">GE</option><option value="GL">GL</option>
-                        <option value="GR">GR</option><option value="JU">JU</option><option value="LU">LU</option>
-                        <option value="NE">NE</option><option value="NW">NW</option><option value="OW">OW</option>
-                        <option value="SG">SG</option><option value="SH">SH</option><option value="SO">SO</option>
-                        <option value="SZ">SZ</option><option value="TG">TG</option><option value="TI">TI</option>
-                        <option value="UR">UR</option><option value="VD">VD</option><option value="VS">VS</option>
-                        <option value="ZG">ZG</option><option value="ZH">ZH</option>
-                    </select>
-                </label>
 
-                <label class="block">
-                    <span class="font-semibold text-sm text-gray-700" th:text="#{ad.form.field.city}">Ville</span>
-                    <input type="text" th:field="*{city}"
-                           class="mt-1 w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"/>
-                </label>
-            </section>
+                <section class="grid gap-6 md:grid-cols-2">
+                    <section class="grid gap-6 md:grid-cols-2">
+
+                        <!-- NPA ou Ville -->
+                        <label class="block md:col-span-2">
+        <span class="font-semibold text-sm text-gray-700">
+            NPA ou Ville
+        </span>
+
+                            <input type="text"
+                                   id="locationInput"
+                                   list="locationList"
+                                   placeholder="1000 ou Lausanne"
+                                   class="mt-1 w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"/>
+
+                            <datalist id="locationList"></datalist>
+                        </label>
+
+                        <!-- Canton (auto, readonly) -->
+                        <label class="block">
+        <span class="font-semibold text-sm text-gray-700">
+            Canton
+        </span>
+
+                            <input type="text"
+                                   id="cantonDisplay"
+                                   readonly
+                                   class="mt-1 w-full p-3 rounded-lg border border-gray-200 bg-gray-100 text-gray-600"/>
+                        </label>
+
+                    </section>
+
+                    <!-- champs réellement soumis -->
+                    <input type="hidden" th:field="*{npa}" id="npaField"/>
+                    <input type="hidden" th:field="*{city}" id="cityField"/>
+                    <input type="hidden" th:field="*{canton}" id="cantonField"/>
+
+
+                </section>
 
             <!-- Photos existantes (édition) -->
             <section th:if="${ad != null and ad.id != null}"
@@ -443,6 +506,94 @@
         updateRemainingUI();
     })();
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+        const input = document.getElementById("locationInput");
+        const list = document.getElementById("locationList");
+
+        const npaField = document.getElementById("npaField");
+        const cityField = document.getElementById("cityField");
+        const cantonField = document.getElementById("cantonField");
+        const cantonDisplay = document.getElementById("cantonDisplay");
+
+        let lastResults = [];
+
+        // 🔹 Recherche dynamique UNIQUEMENT pendant la frappe libre
+        input.addEventListener("input", async () => {
+            const q = input.value.trim();
+
+            // 🚫 si déjà sélectionné "Ville (1008)" → STOP
+            if (/^.+\s*\(\d{4}\)$/.test(q)) {
+                return;
+            }
+
+            list.innerHTML = "";
+            lastResults = [];
+
+            if (q.length < 2) return;
+
+            try {
+                const res = await fetch(`/api/npa/search?q=${encodeURIComponent(q)}`);
+                if (!res.ok) return;
+
+                lastResults = await res.json();
+
+                lastResults.forEach(item => {
+                    const option = document.createElement("option");
+                    option.value = `${item.ville} (${item.npa})`;
+                    list.appendChild(option);
+                });
+
+            } catch (e) {
+                console.error("Erreur NPA search", e);
+            }
+        });
+
+        // 🔹 Sélection utilisateur → remplissage auto
+        input.addEventListener("change", () => {
+            const matchInput = input.value.match(/^(.+?)\s*\((\d{4})\)$/);
+            if (!matchInput) return;
+
+            if (!lastResults || lastResults.length === 0) return;
+
+            const ref = lastResults[0];
+
+            npaField.value = ref.npa;
+            cityField.value = ref.ville;
+            cantonField.value = ref.canton;
+
+            cantonDisplay.value = ref.canton;
+        });
+
+    });
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+        const categorySelect = document.querySelector('[name="category"]');
+        const electronicsSection = document.getElementById('electronicsSection');
+
+        function updateVisibility() {
+            if (!categorySelect || !electronicsSection) return;
+
+            if (categorySelect.value === 'electronics') {
+                electronicsSection.classList.remove('hidden');
+            } else {
+                electronicsSection.classList.add('hidden');
+            }
+        }
+
+        // 🔹 au chargement (édition)
+        updateVisibility();
+
+        // 🔹 au changement utilisateur
+        categorySelect.addEventListener('change', updateVisibility);
+    });
+</script>
+
 <div class="container mx-auto mt-4 px-4">
     <button onclick="window.history.back()"
             class="w-full bg-gray-200 hover:bg-gray-300 px-4 py-4 rounded-xl shadow font-semibold"

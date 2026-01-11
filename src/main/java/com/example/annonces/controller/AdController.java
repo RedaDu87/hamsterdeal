@@ -1,6 +1,7 @@
 package com.example.annonces.controller;
 
 import com.example.annonces.domain.Ad;
+import com.example.annonces.domain.ElectronicsType;
 import com.example.annonces.domain.ImageRef;
 import com.example.annonces.dto.AdRequest;
 import com.example.annonces.dto.PageResponse;
@@ -21,7 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -109,6 +113,7 @@ public class AdController {
     @PreAuthorize("isAuthenticated()")
     public String createForm(Model model) {
         model.addAttribute("ad", new AdRequest());
+        model.addAttribute("electronicsTypes", ElectronicsType.values());
         return "ad-form";
     }
 
@@ -153,6 +158,7 @@ public class AdController {
         }
         model.addAttribute("ad", AdMapper.toRequest(ad));
         model.addAttribute("images", ad.getImages());
+        model.addAttribute("electronicsTypes", ElectronicsType.values());
         return "ad-form";
     }
 

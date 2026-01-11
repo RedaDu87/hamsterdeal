@@ -1,15 +1,15 @@
 package com.example.annonces.service;// AdService.java
 
 import com.example.annonces.domain.Ad;
+import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class AdService {
@@ -101,46 +101,6 @@ public class AdService {
         Query query = new Query(new Criteria().andOperator(ands.toArray(new Criteria[0])));
         long total = mongo.count(query, Ad.class);
         query.with(Sort.by(direction, sortField));
-        query.with(pageable);
-        List<Ad> items = mongo.find(query, Ad.class);
-
-        return new PageImpl<>(items, pageable, total);
-    }
-
-    public Page<Ad> searchAds(
-            String ownerId,
-            String title,
-            String category,
-            BigDecimal minPrice,
-            BigDecimal maxPrice,
-            LocalDate fromDate,
-            LocalDate toDate,
-            Pageable pageable) {
-        List<Criteria> ands = new ArrayList<>();
-        ands.add(Criteria.where("ownerId").is(ownerId)); // ✅ filtrer par ownerId
-
-        if (title != null && !title.isBlank()) {
-            ands.add(Criteria.where("title").regex(title, "i"));
-        }
-        if (category != null && !category.isBlank()) {
-            ands.add(Criteria.where("category").is(category));
-        }
-        if (minPrice != null) {
-            ands.add(Criteria.where("price").gte(minPrice));
-        }
-        if (maxPrice != null) {
-            ands.add(Criteria.where("price").lte(maxPrice));
-        }
-        if (fromDate != null) {
-            ands.add(Criteria.where("createdAt").gte(fromDate.atStartOfDay()));
-        }
-        if (toDate != null) {
-            ands.add(Criteria.where("createdAt").lte(toDate.plusDays(1).atStartOfDay()));
-        }
-
-        Query query = new Query(new Criteria().andOperator(ands.toArray(new Criteria[0])));
-        long total = mongo.count(query, Ad.class);
-
         query.with(pageable);
         List<Ad> items = mongo.find(query, Ad.class);
 

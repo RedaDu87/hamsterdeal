@@ -22,6 +22,10 @@ public class AdRequest {
     private String condition;              // new, like_new, good, fair, for_parts
     private String brand;
     private String color;
+    @NotNull
+    @Min(1000)
+    @Max(9999)
+    private Integer npa;
     private String city;
 
     // Catégories (optionnelles)
@@ -63,14 +67,16 @@ public class AdRequest {
     @Setter
     @Getter
     public static class ElectronicsDTO {
-        private String type;      // phone, laptop, tv...
+
+        @NotBlank
+        @Pattern(
+                regexp = "phone|laptop|tv|console|tablet|smartwatch|camera",
+                flags = Pattern.Flag.CASE_INSENSITIVE,
+                message = "Invalid electronics type"
+        )
+        private String type;
+
         private String model;
-        private Integer storageGb;
-        private Integer ramGb;
-        private String cpu;
-        private String screen;
-        private String os;
-        // getters/setters...
     }
     @Setter
     @Getter

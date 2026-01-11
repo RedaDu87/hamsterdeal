@@ -1,6 +1,7 @@
 package com.example.annonces.RestController;
 
 import com.example.annonces.domain.Ad;
+import com.example.annonces.domain.ElectronicsType;
 import com.example.annonces.domain.ImageRef;
 import com.example.annonces.dto.AdRequest;
 import com.example.annonces.dto.PageResponse;
@@ -20,7 +21,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +74,16 @@ public class AdRestController {
 
         return ResponseEntity.ok(PageResponse.of(result));
     }
+
+    @GetMapping("/meta/electronics-types")
+    public ResponseEntity<List<String>> electronicsTypes() {
+        return ResponseEntity.ok(
+                java.util.Arrays.stream(ElectronicsType.values())
+                        .map(e -> e.name().toLowerCase())
+                        .toList()
+        );
+    }
+
 
     // 🔹 Détail annonce
     @GetMapping("/{id}")

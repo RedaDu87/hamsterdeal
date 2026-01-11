@@ -3,8 +3,8 @@ package com.example.annonces.domain;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
@@ -47,6 +47,9 @@ public class Ad {
     private String condition; // new, like_new, good, fair, for_parts
     private String brand; // marque générique (si pertinent)
     private String color; // couleur générique (si pertinent)
+    @Indexed
+    private Integer npa;
+
     private String city; // ville (utile pour la recherche)
 
     // BLOCS PAR CATÉGORIE (tous optionnels)
@@ -108,14 +111,8 @@ public class Ad {
     @Setter
     @Getter
     public static class ElectronicsAttrs {
-        private String type; // phone, laptop, tv, console…
+        private ElectronicsType type; // phone, laptop, tv, console…
         private String model;
-        private Integer storageGb;
-        private Integer ramGb;
-        private String cpu; // ex: M2, i7-12700H
-        private String screen; // 13", 4K, 144Hz…
-        private String os; // iOS, Android, Windows…
-        // getters/setters...
 
     }
 

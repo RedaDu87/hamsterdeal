@@ -12,11 +12,18 @@ import java.util.Set;
 
 @Service
 public class UserService {
-    private final UserRepository users;
-    private final PasswordEncoder encoder = new BCryptPasswordEncoder();
-    public UserService(UserRepository users){this.users=users;}
 
-    public User register(RegisterRequest r){
+    private final UserRepository users;
+    private final MailService mailService;
+    private final PasswordEncoder encoder = new BCryptPasswordEncoder();
+
+    public UserService(UserRepository users, MailService mailService) {
+        this.users = users;
+        this.mailService = mailService;
+    }
+
+    public User register(RegisterRequest r) {
+
         users.findByEmail(r.getEmail()).ifPresent(u -> {
             throw new IllegalArgumentException("Email déjà utilisé");
         });
@@ -30,14 +37,18 @@ public class UserService {
         u.setPhone(r.getPhone());
         u.setPhotoUrl(r.getPhotoUrl());
 
-        return users.save(u);
+        User saved = users.save(u);
+
+        // 🔥 envoi du mail de bienvenue
+        mailService.sendWelcomeMail(
+                saved.getEmail(),
+                saved.getFirstName()
+        );
+
+        return saved;
     }
 
-
-    public boolean checkPassword(User u, String raw){
+    public boolean checkPassword(User u, String raw) {
         return encoder.matches(raw, u.getPasswordHash());
     }
-
-
-
 }

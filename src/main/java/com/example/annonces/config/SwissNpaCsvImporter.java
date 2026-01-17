@@ -5,15 +5,20 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
+import org.springframework.context.annotation.Configuration;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+@Configuration
 public class SwissNpaCsvImporter {
 
-    private static final String CSV_PATH = "C:\\Users\\user\\Documents\\projets\\hamsterdeal\\src\\main\\java\\com\\example\\annonces\\config\\AMTOVZ_CSV_LV95.csv";
+    private static final String CSV_PATH = "AMTOVZ_CSV_LV95.csv";
+
     private static final String MONGO_URI = "mongodb://localhost:27017";
     private static final String DB_NAME = "annonces";
     private static final String COLLECTION = "npa";
@@ -24,8 +29,15 @@ public class SwissNpaCsvImporter {
 
         try (
                 MongoClient mongoClient = MongoClients.create(MONGO_URI);
-                BufferedReader br = new BufferedReader(new FileReader(CSV_PATH))
+                InputStream is = SwissNpaCsvImporter.class
+                        .getClassLoader()
+                        .getResourceAsStream(CSV_PATH);
+                BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))
         ) {
+            if (is == null) {
+                throw new IllegalStateException("CSV introuvable : " + CSV_PATH);
+            }
+
 
             MongoDatabase db = mongoClient.getDatabase(DB_NAME);
             MongoCollection<Document> collection = db.getCollection(COLLECTION);
